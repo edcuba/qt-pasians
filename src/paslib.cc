@@ -7,3 +7,10 @@
 **/
 
 #include "paslib.h"
+
+
+Card::Card(char _type, char _color)
+{
+    type = _type;
+    color = _color;
+}

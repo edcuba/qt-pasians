@@ -13,23 +13,26 @@
 
 class Card {
 public:
-    char type;   // 2-10, J, Q, K, A
-    char color;  // 0-3, hearts, clubs, diamonds, spades
-    std::pair<int, int> position; // x,y
-    Card& parent;
+    char type {0};   // 2-10, J, Q, K, A
+    char color {0};  // 1-4, hearts, clubs, diamonds, spades
+    bool visible {false};
+    Card *parent {nullptr};
 
-    Card();
-    ~Card();
+    bool move(int x, int y);
+
+    Card(char _type, char _color);
+
 protected:
+    std::pair<int, int> position {0, 0}; // x,y
 };
 
 class Game {
 public:
     void setup();
     void reset();
-    Game();
-    ~Game();
+    void load();
 protected:
+    void generateDeck();
 };
 
 #endif
