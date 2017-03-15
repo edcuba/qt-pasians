@@ -13,6 +13,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "paslib.h"
 
 using namespace std;
 
@@ -24,24 +25,26 @@ public:
     Command();
 };
 
-int cli();
-Command parse();
-int newGame(vector<string> &attributes);
-int exitGame(vector<string> &attributes);
-int printHelp(vector<string> &attributes);
+class Cli {
+public:
+    int run();
+protected:
+    static Command parse();
+    static int newGame(vector<string> &attributes);
+    static int exitGame(vector<string> &attributes);
+    static int printHelp(vector<string> &attributes);
 
-const std::unordered_map<string, int (*)(vector<string> &)> commands {
-    {"new", *newGame},
-    {"exit", *exitGame},
-    {"help", *printHelp}
+    const unordered_map<string, int (*)(vector<string> &)> commands {
+        {"new", *Cli::newGame},
+        {"exit", *Cli::exitGame},
+        {"help", *Cli::printHelp}
+    };
 };
 
-const std::map<string, string> helpList {
+const map<string, string> helpList {
     {"new",  "       \t\tStart new game."},
     {"exit", " [save]\t\tExit. Add save to keep the game status."},
     {"help", " [cmd] \t\tPrint this list. Add command name to print only its record."}
 };
-
-
 
 #endif

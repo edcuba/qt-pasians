@@ -15,6 +15,8 @@
 
 using namespace std;
 
+vector<Game> games;
+
 Command::Command(string _cmd)
 {
     cmd = _cmd;
@@ -22,19 +24,28 @@ Command::Command(string _cmd)
 
 Command::Command(){}
 
-int newGame(vector<string> &attributes)
+/**
+* Setup new game
+* @param attributes additional attributes
+* @return 0
+**/
+int Cli::newGame(vector<string> &attributes)
 {
-    //TODO
+    Game game;
+    game.setup();
+    games.push_back(game);
+    for (auto card: game.pickPile.cards) {
+        cout << "Type: " << (int) card.type << " \t| Color: " << (int) card.color << endl;
+    }
     return 0;
 }
 
 /**
-* exitGame:
-* @attributes: #Command attributes for exit - "save"
 * Quits the application saving or discarding changes
-* Returns: -1 if save was successful or not required
+* @param attributes #Command attributes for exit - "save"
+* @return -1 if save was successful or not required
 **/
-int exitGame(vector<string> &attributes)
+int Cli::exitGame(vector<string> &attributes)
 {
     //TODO save - if exit was called with attribute save. Ask [y,N] if wasn't.
     for (auto str: attributes) {
@@ -45,11 +56,10 @@ int exitGame(vector<string> &attributes)
 }
 
 /**
-* parse:
 * Parse input from CLI into command object
-* Returns: #Command object
+* @return #Command object
 **/
-Command parse()
+Command Cli::parse()
 {
     string in;
     getline(cin, in);
@@ -66,12 +76,13 @@ Command parse()
 }
 
 /**
-* cli:
 * Execute commands form CLI
-* Returns: 0 if successful
+* @return 0 if successful
 **/
-int cli()
+int Cli::run()
 {
+    cout << "Welcome to Pasians " << VERSION << "\n"
+         << "Type 'help' for some tips and tricks." << endl;
     while(true) {
         cout << ">> " << flush;
         Command cmd = parse();
@@ -93,14 +104,12 @@ int cli()
 }
 
 /**
-* printHelp:
-* @attributes: list of commands to print
-*
 * Print help for commands specified as attributes, or whole help
 * if no command is specified.
-* Returns: 0 if success, 1 if command was not found
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
 **/
-int printHelp(vector<string> &attributes)
+int Cli::printHelp(vector<string> &attributes)
 {
     cout << "Command    \t\tDescription\n\n";
     if (attributes.empty()) {
@@ -124,8 +133,6 @@ int printHelp(vector<string> &attributes)
 
 int main()
 {
-    cout << "Welcome to Pasians " << VERSION << "\n"
-         << "Type 'help' for some tips and tricks." << endl;
-
-    return cli();
+    Cli cli;
+    return cli.run();
 }
