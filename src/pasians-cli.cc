@@ -40,6 +40,7 @@ int exitGame(vector<string> &attributes)
     for (auto str: attributes) {
         cout << str << endl;
     }
+    cout << endl;
     return -1;
 }
 
