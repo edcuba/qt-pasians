@@ -10,6 +10,7 @@
 #include "pasians-cli.h"
 #include <iostream>
 #include <sstream>
+#include <locale>
 
 #define VERSION "0.0.1"
 
@@ -34,10 +35,64 @@ int Cli::newGame(vector<string> &attributes)
     Game game;
     game.setup();
     games.push_back(game);
-    for (auto card: game.pickPile.cards) {
-        cout << "Type: " << (int) card.type << " \t| Color: " << (int) card.color << endl;
-    }
+
+    printState(game);
     return 0;
+}
+
+/**
+* Print card
+* @param card particular game card
+**/
+void Cli::printCard(Card &card)
+{
+    string c;
+    if (card.visible) {
+        c = to_string((int)card.type) + "-" + to_string((int) card.color);
+    } else {
+        c = "none";
+    }
+    cout << cardChar.find(c)->second;
+}
+
+/**
+* Print pile
+* @param pile pile of cards
+**/
+void Cli::printPile(Pile &pile)
+{
+    for (auto card: pile.cards) {
+        printCard(card);
+    }
+    cout << endl;
+}
+
+/**
+* Print game statue - piles and cards
+* @param game current game
+**/
+void Cli::printState(Game &game)
+{
+    cout << "PICK" << endl;
+    printPile(game.pickPile);
+
+    cout << "DROP" << endl;
+    printPile(game.dropPile);
+
+    int counter = 1;
+    for (auto pile: game.topPiles) {
+        cout << "T" << counter << endl;
+        printPile(pile);
+        counter++;
+    }
+
+    counter = 1;
+
+    for (auto pile: game.bottomPiles) {
+        cout << "B" << counter << endl;
+        printPile(pile);
+        counter++;
+    }
 }
 
 /**
@@ -63,7 +118,7 @@ Command Cli::parse()
 {
     string in;
     getline(cin, in);
-    if (in.empty()) {
+    if (cin.eof()) {
         return Command("exit");
     }
     stringstream ss(in);
@@ -81,11 +136,17 @@ Command Cli::parse()
 **/
 int Cli::run()
 {
+    setlocale(LC_CTYPE, "");
+
     cout << "Welcome to Pasians " << VERSION << "\n"
          << "Type 'help' for some tips and tricks." << endl;
     while(true) {
         cout << ">> " << flush;
         Command cmd = parse();
+
+        if (cmd.cmd.empty()) {
+            continue;
+        }
 
         auto it = commands.find(cmd.cmd); // check command
 

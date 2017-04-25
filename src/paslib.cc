@@ -23,6 +23,7 @@ void Game::setup()
     vector<Card> cards = getCards();
     //TODO: setup piles
     pickPile.add(cards);
+    pickPile.showTop();
 }
 
 /**
@@ -46,4 +47,11 @@ vector<Card> Game::getCards()
 void Heap::add(vector<Card> _cards)
 {
     cards.insert(cards.end(), _cards.begin(), _cards.end());
+}
+
+void Heap::showTop()
+{
+    if (!cards.empty()) {
+        cards.back().visible = true;
+    }
 }

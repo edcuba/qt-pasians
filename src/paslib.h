@@ -35,6 +35,7 @@ public:
     void add(Card card);
     void add(Heap &heap);
     Heap take(int count);
+    void showTop();
     vector<Card> cards;
 };
 

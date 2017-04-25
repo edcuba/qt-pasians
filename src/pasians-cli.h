@@ -30,6 +30,12 @@ public:
     int run();
 protected:
     static Command parse();
+
+    static void printCard(Card &card);
+    static void printPile(Pile &pile);
+    static void printState(Game &game);
+
+    /* cli command handlers */
     static int newGame(vector<string> &attributes);
     static int exitGame(vector<string> &attributes);
     static int printHelp(vector<string> &attributes);
@@ -45,6 +51,64 @@ const map<string, string> helpList {
     {"new",  "       \t\tStart new game."},
     {"exit", " [save]\t\tExit. Add save to keep the game status."},
     {"help", " [cmd] \t\tPrint this list. Add command name to print only its record."}
+};
+
+// 2-10, J (11), Q (12), K (13), A (14)
+// 0-3, hearts, clubs, diamonds, spades
+const unordered_map<string, string> cardChar {
+    {"2-0",  " 🂲"},
+    {"3-1",  " 🃓"},
+    {"4-2",  " 🃄"},
+    {"5-3",  " 🂥"},
+    {"6-0",  " 🂶"},
+    {"7-1",  " 🃗"},
+    {"8-2",  " 🃈"},
+    {"9-3",  " 🂩"},
+    {"10-0", " 🂺"},
+    {"11-1", " 🃛"},
+    {"12-2", " 🃍"},
+    {"13-3", " 🂮"},
+    {"14-0", " 🂱"},
+    {"2-1",  " 🃒"},
+    {"3-2",  " 🃃"},
+    {"4-3",  " 🂤"},
+    {"5-0",  " 🂵"},
+    {"6-1",  " 🃖"},
+    {"7-2",  " 🃇"},
+    {"8-3",  " 🂨"},
+    {"9-0",  " 🂹"},
+    {"10-1", " 🃚"},
+    {"11-2", " 🃋"},
+    {"12-3", " 🂭"},
+    {"13-0", " 🂾"},
+    {"14-1", " 🃑"},
+    {"2-2",  " 🃂"},
+    {"3-3",  " 🂣"},
+    {"4-0",  " 🂴"},
+    {"5-1",  " 🃕"},
+    {"6-2",  " 🃆"},
+    {"7-3",  " 🂧"},
+    {"8-0",  " 🂸"},
+    {"9-1",  " 🃙"},
+    {"10-2", " 🃊"},
+    {"11-3", " 🂫"},
+    {"12-0", " 🂽"},
+    {"13-1", " 🃞"},
+    {"14-2", " 🃁"},
+    {"2-3",  " 🂢"},
+    {"3-0",  " 🂳"},
+    {"4-1",  " 🃔"},
+    {"5-2",  " 🃅"},
+    {"6-3",  " 🂦"},
+    {"7-0",  " 🂷"},
+    {"8-1",  " 🃘"},
+    {"9-2",  " 🃉"},
+    {"10-3", " 🂪"},
+    {"11-0", " 🂻"},
+    {"12-1", " 🃝"},
+    {"13-2", " 🃎"},
+    {"14-3", " 🂡"},
+    {"none", " 🂠"}
 };
 
 #endif
