@@ -127,8 +127,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
         ui->gameLayout->setRowMinimumHeight(1, layout.cardHeight);
     }
 
-    ui->gameLayout->setHorizontalSpacing(layout.hspace);
-    ui->gameLayout->setVerticalSpacing(layout.wspace);
+    ui->gameLayout->setHorizontalSpacing(layout.wspace);
 
     if (game->initialized) {
         for (auto &card: game->gameCards) {
@@ -148,8 +147,8 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
         for (auto &card: game->dropPile.cards) {
             string type = hashCard(card);
-            card.x = 1;
-            card.y = 0;
+            card.x = 0;
+            card.y = 1;
             game->gameCards[type] = drawCard(card, cardSize);
         }
 
@@ -159,8 +158,8 @@ void Pasians::showGame(GGame *game, Layout &layout)
         for (auto &pile: game->bottomPiles) {
             for (auto &card: pile.cards) {
                 string type = hashCard(card);
-                card.x = pilenum;
-                card.y = 3;
+                card.x = 3;
+                card.y = pilenum;
                 game->gameCards[type] = drawCard(card, cardSize);
             }
             pilenum++;
@@ -175,13 +174,13 @@ Layout::Layout(int height, int width)
 {
     int w = width / 100;
 
-    int hregion = height / 4;
+    if (w * 14.52 * 5 > height) {
+        w = 1.452 * height / 100;
+    }
 
-    wspace = w * 2;
+    wspace = w;
 
-    hspace = hregion / 4;
-
-    cardWidth = 12 * w;
+    cardWidth = 10 * w;
 
     cardHeight = cardWidth * 1.452; // 500 x 726
 }

@@ -30,8 +30,8 @@ public:
 
 class Heap {
 public:
-    void add(vector<Card> _cards);
-    void add(Card card);
+    void add(vector<Card> &_cards);
+    void add(Card &card);
     void add(Heap &heap);
     Heap take(int count);
     void showTop();

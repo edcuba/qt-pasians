@@ -21,9 +21,63 @@ Card::Card(char _type, char _color)
 void Game::setup()
 {
     vector<Card> cards = getCards();
+
     //TODO: setup piles
-    pickPile.add(cards);
+    int i = 0;
+    for (auto &card: cards) { //just random setup for debugging - replace this
+        switch (i) {
+        case 0:
+            pickPile.add(card);
+            break;
+        case 1:
+            dropPile.add(card);
+            break;
+        case 2:
+            topPiles[0].add(card);
+            break;
+        case 3:
+            topPiles[1].add(card);
+            break;
+        case 4:
+            topPiles[2].add(card);
+            break;
+        case 5:
+            topPiles[3].add(card);
+            break;
+        case 6:
+            bottomPiles[0].add(card);
+            break;
+        case 7:
+            bottomPiles[1].add(card);
+            break;
+        case 8:
+            bottomPiles[2].add(card);
+            break;
+        case 9:
+            bottomPiles[3].add(card);
+            break;
+        case 10:
+            bottomPiles[4].add(card);
+            break;
+        case 11:
+            bottomPiles[5].add(card);
+            break;
+        case 12:
+            bottomPiles[6].add(card);
+            break;
+        default:
+            i = -1;
+        }
+        i++;
+    }
     pickPile.showTop();
+    dropPile.showTop();
+    for (auto &pile: bottomPiles) {
+        pile.showTop();
+    }
+    for (auto &pile: topPiles) {
+        pile.showTop();
+    }
 }
 
 /**
@@ -44,9 +98,14 @@ vector<Card> Game::getCards()
 }
 
 
-void Heap::add(vector<Card> _cards)
+void Heap::add(vector<Card> &_cards)
 {
     cards.insert(cards.end(), _cards.begin(), _cards.end());
+}
+
+void Heap::add(Card &card)
+{
+    cards.push_back(card);
 }
 
 void Heap::showTop()

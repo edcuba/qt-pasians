@@ -18,8 +18,6 @@ public:
 
     int cardWidth;
     int cardHeight;
-
-    int hspace;
     int wspace;
 };
 
