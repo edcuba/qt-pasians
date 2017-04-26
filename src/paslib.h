@@ -24,9 +24,8 @@ public:
     bool move(int x, int y);
 
     Card(char _type, char _color);
-
-protected:
-    pair<int, int> position {0, 0}; // x,y
+    int x;
+    int y;
 };
 
 class Heap {
@@ -61,4 +60,4 @@ protected:
     vector<Card> getCards();
 };
 
-#endif
+#endif //_PASLIB_H

@@ -13,9 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        pasians.cpp
+        pasians.cpp\
+        ../src/paslib.cc
 
-HEADERS  += pasians.h
+HEADERS  += pasians.h ../src/paslib.h
 
 FORMS    += pasians.ui
 
@@ -59,12 +60,9 @@ DISTFILES += \
     res/ace_of_diamonds.png \
     res/ace_of_hearts.png \
     res/ace_of_spades.png \
-    res/ace_of_spades2.png \
     res/black_joker.png \
     res/jack_of_clubs.png \
     res/jack_of_clubs2.png \
-    res/jack_of_diamonds.png \
-    res/jack_of_diamonds2.png \
     res/jack_of_hearts.png \
     res/jack_of_hearts2.png \
     res/jack_of_spades.png \
@@ -81,11 +79,11 @@ DISTFILES += \
     res/queen_of_clubs2.png \
     res/queen_of_diamonds.png \
     res/queen_of_diamonds2.png \
-    res/queen_of_hearts.png \
-    res/queen_of_hearts2.png \
     res/queen_of_spades.png \
     res/queen_of_spades2.png \
-    res/red_joker.png
+    res/red_joker.png \
+    res/jack_of_diamonds.png \
+    res/queen_of_hearts.png
 
 RESOURCES += \
     images.qrc
