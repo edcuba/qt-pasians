@@ -6,10 +6,18 @@
 #include <unordered_map>
 #include "../src/paslib.h"
 #include <QLabel>
+#include <QSize>
+#include <QSplitter>
 
 namespace Ui {
     class Pasians;
 }
+
+class GameCard : public QLabel
+{
+public:
+    QSize minimumSizeHint() const;
+};
 
 class Layout
 {
@@ -24,7 +32,7 @@ public:
 class GGame : public Game {
 public:
     bool initialized = false;
-    unordered_map<string, QLabel*> gameCards;
+    unordered_map<string, GameCard*> gameCards;
     ~GGame();
 };
 
@@ -39,12 +47,16 @@ public:
 
 private:
     vector<GGame*> games;
+    vector<QSplitter*> bottomHolders;
+
+
     Ui::Pasians *ui;
 
     GGame *generateGame();
     void showGame(GGame *game, Layout &layout);
     void showGames(Layout &layout);
-    QLabel *drawCard(Card &card, QSize &cardSize);
+    GameCard *drawCard(Card &card, QSize &cardSize);
+    GameCard *drawChildCard(Card &card, QSize &cardSize, QSplitter *parent);
     string hashCard(Card &card);
 
 };

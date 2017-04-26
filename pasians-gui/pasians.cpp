@@ -1,11 +1,11 @@
 #include "pasians.h"
 #include "ui_pasians.h"
 #include <QPixmap>
-#include <QLabel>
 #include <QSize>
 #include <QDebug>
 #include <QResizeEvent>
 #include <QGridLayout>
+#include <QSplitter>
 #include "../src/paslib.h"
 
 #include <vector>
@@ -42,6 +42,10 @@ Pasians::~Pasians()
     for (auto &game: games) {
         delete game;
     }
+}
+
+QSize GameCard::minimumSizeHint() const {
+    return QSize(size().width(), size().height() / 5);
 }
 
 GGame::~GGame()
@@ -89,13 +93,13 @@ string Pasians::hashCard(Card &card)
  * @param card game card
  * @returns card label reference
  */
-QLabel *Pasians::drawCard(Card &card, QSize &cardSize)
+GameCard *Pasians::drawCard(Card &card, QSize &cardSize)
 {
-    QLabel *lbl = new QLabel();
+    GameCard *lbl = new GameCard();
 
     lbl->setFixedSize(cardSize);
 
-    ui->gameLayout->addWidget(lbl, card.x, card.y);
+    ui->gameLayout->addWidget(lbl, card.x, card.y, Qt::AlignTop);
 
     string type = hashCard(card);
 
@@ -106,6 +110,34 @@ QLabel *Pasians::drawCard(Card &card, QSize &cardSize)
     lbl->setPixmap(img);
 
     lbl->setScaledContents(true);
+    return lbl;
+}
+
+/**
+ * @brief Pasians::drawChildCard draw single card at specified position
+ * @param card game card object
+ * @param cardSize size of the card
+ * @param perent parent layout
+ * @return card label reference
+ */
+GameCard *Pasians::drawChildCard(Card &card, QSize &cardSize, QSplitter *parent)
+{
+    GameCard *lbl = new GameCard();
+
+    string type = hashCard(card);
+
+    string path = cardImg.find(type)->second;
+
+    QPixmap img(path.c_str());
+
+    lbl->setPixmap(img);
+
+    lbl->setScaledContents(true);
+
+    lbl->setFixedSize(cardSize);
+
+    parent->addWidget(lbl);
+
     return lbl;
 }
 
@@ -123,18 +155,27 @@ void Pasians::showGame(GGame *game, Layout &layout)
         ui->gameLayout->setColumnMinimumWidth(i, layout.cardWidth);
     }
 
-    for (int i = 0; i < 3; ++i) {
-        ui->gameLayout->setRowMinimumHeight(1, layout.cardHeight);
-    }
+    ui->gameLayout->setRowMinimumHeight(0, layout.cardHeight);
+
+    ui->gameLayout->setRowMinimumHeight(1, 3.4 * layout.cardHeight);
 
     ui->gameLayout->setHorizontalSpacing(layout.wspace);
+    ui->gameLayout->setVerticalSpacing(layout.cardHeight / 5);
 
     if (game->initialized) {
         for (auto &card: game->gameCards) {
+            card.second->setFixedSize(cardSize);
+        }
+        int pilenum = 0;
+        for (auto &pile: game->bottomPiles) {
+            for (auto &box: bottomHolders) {
+                int size = pile.cards.size();
+                int maxh = (size + 5) * (cardSize.height() / 5);
 
-            QLabel *lbl = card.second;
-
-            lbl->setFixedSize(cardSize);
+                box->setMaximumHeight(maxh);
+                box->setFixedWidth(cardSize.width());
+            }
+            pilenum++;
         }
     } else {
 
@@ -156,11 +197,20 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
         int pilenum = 0;
         for (auto &pile: game->bottomPiles) {
+            QSplitter *box = new QSplitter(Qt::Vertical);
+            bottomHolders.push_back(box);
+
+            int size = pile.cards.size();
+            int maxh = (size + 5) * (cardSize.height() / 5);
+
+            box->setMaximumHeight(maxh);
+            box->setFixedWidth(cardSize.width());
+
+            ui->gameLayout->addWidget(box, 1, pilenum);
+
             for (auto &card: pile.cards) {
                 string type = hashCard(card);
-                card.x = 3;
-                card.y = pilenum;
-                game->gameCards[type] = drawCard(card, cardSize);
+                game->gameCards[type] = drawChildCard(card, cardSize, box);
             }
             pilenum++;
         }
@@ -175,12 +225,12 @@ Layout::Layout(int height, int width)
     int w = width / 100;
 
     if (w * 14.52 * 5 > height) {
-        w = 1.452 * height / 100;
+        w = 1.5 * height / 100;
     }
 
-    wspace = w;
+    wspace = w * 2.5;
 
-    cardWidth = 10 * w;
+    cardWidth = 12 * w;
 
     cardHeight = cardWidth * 1.452; // 500 x 726
 }
