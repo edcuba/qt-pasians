@@ -16,11 +16,17 @@
     <height>480</height>
    </size>
   </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Pasians</string>
   </property>
   <widget class="QWidget" name="gameBoard">
    <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="mouseTracking">
     <bool>true</bool>
    </property>
    <property name="styleSheet">
@@ -29,11 +35,23 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QGraphicsView" name="graphicsView">
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
       <property name="frameShadow">
        <enum>QFrame::Plain</enum>
       </property>
       <property name="lineWidth">
        <number>0</number>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
      </widget>
     </item>

@@ -5,10 +5,10 @@
 #include <QResizeEvent>
 #include "../src/paslib.h"
 #include <QGraphicsScene>
-#include <QLabel>
-
 #include <vector>
 #include <iostream>
+#include <QSizePolicy>
+#include <QGraphicsSceneMouseEvent>
 
 
 
@@ -29,16 +29,36 @@ Pasians::Pasians(QWidget *parent) :
 
     QSize s = size();
 
-    Layout layout(s.height(), s.width());
+    Layout layout(s);
 
     showGame(game, layout);
 
     view->show();
+
+    view->setMouseTracking(true);
+    this->setMouseTracking(true);
+    ui->gameBoard->setMouseTracking(true);
+}
+
+void PlayLabel::mousePressEvent(QMouseEvent * event)
+{
+    Q_UNUSED(event);
+}
+
+void PlayLabel::mouseReleaseEvent(QMouseEvent * event)
+{
+    Q_UNUSED(event);
+    pasians->redraw();
+}
+
+void PlayLabel::mouseMoveEvent(QMouseEvent *event)
+{
+    parent->setPos(x() + event->x() - size().width() / 2, y() + event->y() - size().height() / 2);
 }
 
 void Pasians::resizeEvent(QResizeEvent* event)
 {
-    Layout layout(event->size().height(), event->size().width());
+    Layout layout(event->size());
 
     showGames(layout);
 }
@@ -53,9 +73,6 @@ Pasians::~Pasians()
 
 GGame::~GGame()
 {
-    for (auto &card: gameCards) {
-        delete card.second;
-    }
 }
 
 /**
@@ -66,6 +83,11 @@ GGame *Pasians::generateGame()
     GGame *game = new GGame();
     game->setup();
     return game;
+}
+
+void Pasians::redraw()
+{
+    showGames(activeLayout);
 }
 
 /**
@@ -96,13 +118,19 @@ string Pasians::hashCard(Card &card)
  * @param card game card
  * @returns card label reference
  */
-QLabel *Pasians::drawCard(Card &card, QSize &cardSize)
+QGraphicsProxyWidget *Pasians::drawCard(Card &card, QSize &cardSize)
 {
-    QLabel *lbl = new QLabel();
+    PlayLabel *lbl = new PlayLabel();
 
-    string type = hashCard(card);
+    string type = "none";
 
-    string path = cardImg.find(type)->second;
+    if (card.visible){
+        type = hashCard(card);
+    }
+
+    string path;
+
+    path = cardImg.find(type)->second;
 
     QPixmap img(path.c_str());
 
@@ -112,7 +140,12 @@ QLabel *Pasians::drawCard(Card &card, QSize &cardSize)
 
     lbl->setFixedSize(cardSize);
 
-    return lbl;
+    QGraphicsProxyWidget *w = scene->addWidget(lbl);
+
+    lbl->parent = w;
+    lbl->pasians = this;
+
+    return w;
 }
 
 /**
@@ -123,52 +156,89 @@ QLabel *Pasians::drawCard(Card &card, QSize &cardSize)
 void Pasians::showGame(GGame *game, Layout &layout)
 {
     QSize cardSize(layout.cardWidth, layout.cardHeight);
+
+    view->centerOn(0, 0);
+
     QGraphicsProxyWidget *w;
     if (game->initialized) {
-        for (auto &card: game->gameCards) {
-            w = card.second;
-            w->widget()->setFixedSize(cardSize);
-        }
-
-    } else {
-
-        QLabel *gc;
 
         for (auto &card: game->pickPile.cards) {
-            string type = hashCard(card);
-            gc = drawCard(card, cardSize);
-            w = scene->addWidget(gc);
+            w = (QGraphicsProxyWidget *) card.parent;
             w->setPos(layout.pick);
-            game->gameCards[type] = w;
         }
 
         for (auto &card: game->dropPile.cards) {
-            string type = hashCard(card);
-            gc = drawCard(card, cardSize);
-            w = scene->addWidget(gc);
+            w = (QGraphicsProxyWidget *) card.parent;
             w->setPos(layout.drop);
-            game->gameCards[type] = w;
         }
 
         QPoint botPos = layout.bot;
         for (auto &pile: game->bottomPiles) {
             for (auto &card: pile.cards) {
-                string type = hashCard(card);
-                gc = drawCard(card, cardSize);
-                w = scene->addWidget(gc);
+                w = (QGraphicsProxyWidget *) card.parent;
                 w->setPos(botPos);
-                game->gameCards[type] = w;
+                botPos.setY(botPos.y() + layout.cardHeight / 5);
+            }
+            botPos.setX(botPos.x() + layout.cardWidth + layout.wspace);
+            botPos.setY(layout.bot.y());
+        }
+
+        QPoint topPos = layout.top;
+        for (auto &pile: game->topPiles) {
+            for (auto &card: pile.cards) {
+                w = (QGraphicsProxyWidget *) card.parent;
+                w->setPos(topPos);
+            }
+            topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
+        }
+
+    } else {
+
+        for (auto &card: game->pickPile.cards) {
+            w = drawCard(card, cardSize);
+            w->setPos(layout.pick);
+            card.parent = w;
+        }
+
+        for (auto &card: game->dropPile.cards) {
+            w = drawCard(card, cardSize);
+            w->setPos(layout.drop);
+            card.parent = w;
+        }
+
+        QPoint botPos = layout.bot;
+        for (auto &pile: game->bottomPiles) {
+            for (auto &card: pile.cards) {
+                w = drawCard(card, cardSize);
+                w->setPos(botPos);
+                card.parent = w;
             }
             botPos.setX(botPos.x() + layout.cardWidth + layout.wspace);
         }
 
+        QPoint topPos = layout.top;
+        for (auto &pile: game->topPiles) {
+            for (auto &card: pile.cards) {
+                w = drawCard(card, cardSize);
+                w->setPos(botPos);
+                card.parent = w;
+            }
+            topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
+        }
+
         game->initialized = true;
     }
+    activeLayout = layout;
 }
 
 
-Layout::Layout(int height, int width)
+Layout::Layout() {}
+
+Layout::Layout(const QSize &size)
 {
+    int height = size.height();
+    int width = size.width();
+
     int w = width / 100;
 
     if (w * 14.52 * 5 > height) {
@@ -180,14 +250,14 @@ Layout::Layout(int height, int width)
 
     cardHeight = cardWidth * 1.452; // 500 x 726
 
-    pick.setX(- width / 2);
+    pick.setX(- width / 2 + cardWidth / 2);
     pick.setY(- height / 2);
 
     drop.setX(pick.x() + cardWidth + wspace);
     drop.setY(pick.y());
 
-    bot.setX(- width / 2);
-    bot.setY(height / 5 - cardHeight);
+    bot.setX(pick.x());
+    bot.setY(-cardHeight);
 
     top.setX(drop.x() + 2 * (cardWidth + wspace));
     top.setY(pick.y());

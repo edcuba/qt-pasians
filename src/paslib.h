@@ -19,13 +19,9 @@ public:
     char type {0};   // 2-10, J (11), Q (12), K (13), A (14)
     char color {4};  // 0-3, hearts, clubs, diamonds, spades
     bool visible {false};
-    Card *parent {nullptr};
-
     bool move(int x, int y);
-
     Card(char _type, char _color);
-    int x;
-    int y;
+    void *parent;
 };
 
 class Heap {

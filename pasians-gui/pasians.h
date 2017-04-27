@@ -16,10 +16,27 @@ namespace Ui {
     class Pasians;
 }
 
+class Pasians;
+
+class PlayLabel : public QLabel
+{
+    Q_OBJECT
+
+public:
+    QGraphicsProxyWidget *parent = NULL;
+    Pasians *pasians = NULL;
+
+protected:
+    void mousePressEvent(QMouseEvent * event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+};
+
 class Layout
 {
 public:
-    Layout(int height, int width);
+    Layout(const QSize &size);
+    Layout();
 
     int cardWidth;
     int cardHeight;
@@ -35,7 +52,6 @@ public:
 class GGame : public Game {
 public:
     bool initialized = false;
-    unordered_map<string, QGraphicsProxyWidget*> gameCards;
     ~GGame();
 };
 
@@ -48,6 +64,8 @@ public:
     void resizeEvent(QResizeEvent* event);
     ~Pasians();
 
+    void redraw();
+
 private:
     vector<GGame*> games;
 
@@ -56,11 +74,13 @@ private:
 
     Ui::Pasians *ui;
 
+    void showGames(Layout &layout);
     GGame *generateGame();
     void showGame(GGame *game, Layout &layout);
-    void showGames(Layout &layout);
-    QLabel *drawCard(Card &card, QSize &cardSize);
+    QGraphicsProxyWidget *drawCard(Card &card, QSize &cardSize);
     string hashCard(Card &card);
+
+    Layout activeLayout;
 
 };
 
@@ -120,7 +140,7 @@ const unordered_map<string, string> cardImg {
     {"12-1", ":/res/queen_of_clubs.png"},
     {"13-2", ":/res/king_of_diamonds.png"},
     {"14-3", ":/res/ace_of_spades.png"},
-    {"none", ":/res/black_joker.png"}
+    {"none", ":/res/none.png"}
 };
 
 #endif // PASIANS_H
