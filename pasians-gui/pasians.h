@@ -5,19 +5,16 @@
 #include <QRect>
 #include <unordered_map>
 #include "../src/paslib.h"
-#include <QLabel>
 #include <QSize>
-#include <QSplitter>
+#include <QGraphicsScene>
+#include <QGraphicsProxyWidget>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QPoint>
 
 namespace Ui {
     class Pasians;
 }
-
-class GameCard : public QLabel
-{
-public:
-    QSize minimumSizeHint() const;
-};
 
 class Layout
 {
@@ -27,12 +24,18 @@ public:
     int cardWidth;
     int cardHeight;
     int wspace;
+
+    QPoint pick;
+    QPoint drop;
+
+    QPoint bot;
+    QPoint top;
 };
 
 class GGame : public Game {
 public:
     bool initialized = false;
-    unordered_map<string, GameCard*> gameCards;
+    unordered_map<string, QGraphicsProxyWidget*> gameCards;
     ~GGame();
 };
 
@@ -47,16 +50,16 @@ public:
 
 private:
     vector<GGame*> games;
-    vector<QSplitter*> bottomHolders;
 
+    QGraphicsScene *scene;
+    QGraphicsView *view;
 
     Ui::Pasians *ui;
 
     GGame *generateGame();
     void showGame(GGame *game, Layout &layout);
     void showGames(Layout &layout);
-    GameCard *drawCard(Card &card, QSize &cardSize);
-    GameCard *drawChildCard(Card &card, QSize &cardSize, QSplitter *parent);
+    QLabel *drawCard(Card &card, QSize &cardSize);
     string hashCard(Card &card);
 
 };
