@@ -14,9 +14,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         pasians.cpp\
-        ../src/paslib.cc
+        ../src/paslib.cc \
+        playlabel.cpp \
+    layout.cpp \
+    ggame.cpp
 
-HEADERS  += pasians.h ../src/paslib.h
+HEADERS  += pasians.h \
+        ../src/paslib.h \
+        playlabel.h \
+    layout.h \
+    cards.h \
+    ggame.h
 
 FORMS    += pasians.ui
 
