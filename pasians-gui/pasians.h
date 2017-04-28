@@ -1,9 +1,6 @@
 #ifndef PASIANS_H
 #define PASIANS_H
 
-#include "layout.h"
-#include "cards.h"
-#include "ggame.h"
 #include <QMainWindow>
 #include <QRect>
 #include <QSize>
@@ -21,6 +18,9 @@ namespace Ui {
 class Pasians;
 
 #include "playlabel.h"
+#include "layout.h"
+#include "cards.h"
+#include "ggame.h"
 
 class Pasians : public QMainWindow
 {
@@ -32,7 +32,6 @@ public:
     ~Pasians();
 
     void redraw();
-
 private:
     vector<GGame*> games;
 

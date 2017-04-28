@@ -1,7 +1,6 @@
 #ifndef PLAYLABEL_H
 #define PLAYLABEL_H
 
-#include "ggame.h"
 #include <QLabel>
 #include <QGraphicsProxyWidget>
 #include <QMouseEvent>
@@ -10,6 +9,7 @@
 class PlayLabel;
 
 #include "pasians.h"
+#include "ggame.h"
 
 class PlayLabel : public QLabel
 {
@@ -17,12 +17,12 @@ class PlayLabel : public QLabel
 
 public:
     PlayLabel();
-    void setContext(QGraphicsProxyWidget *wrapper, Pasians *pasians);
+    void setWrapper(QGraphicsProxyWidget *wrapper);
 
     void setPos(QPoint &point);
     void setPile(Pile *pile);
     void changePile(Pile *pile);
-    void setCard(Card &card, Pile &pile);
+    void setCard(Card &card, Pile &pile, GGame *ggame);
     void setZ(int z);
 
 protected:
@@ -34,9 +34,10 @@ protected:
 
 private:
     QGraphicsProxyWidget *cardWrapper = NULL;
-    Pasians *gameWindow = NULL;
     Pile *actualPile = NULL;
     Card *gameCard = NULL;
+
+    GGame *game = NULL;
 
     vector<Card*> childs;
 };

@@ -4,6 +4,8 @@
 #include <QPoint>
 #include <algorithm>
 
+#include <iostream>
+
 PlayLabel::PlayLabel() {}
 
 void PlayLabel::mousePressEvent(QMouseEvent * event)
@@ -32,10 +34,16 @@ void PlayLabel::setZ(int z)
 }
 
 
-void PlayLabel::mouseReleaseEvent(QMouseEvent * event)
+void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-    gameWindow->redraw();
+    //this is card relative position
+    //TODO - get total position
+    Pile *pile = game->pileAt(event->pos());
+    if (pile) {
+        //move cards to other pile
+    }
+    game->redraw();
+
 }
 
 void PlayLabel::mouseMoveEvent(QMouseEvent *event)
@@ -58,12 +66,14 @@ void PlayLabel::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void PlayLabel::setCard(Card &card, Pile &pile)
+void PlayLabel::setCard(Card &card, Pile &pile, GGame *ggame)
 {
     card.parent = this;
 
     gameCard = &card;
     actualPile = &pile;
+
+    game = ggame;
 }
 
 void PlayLabel::moveCard(QPoint &position)
@@ -71,10 +81,9 @@ void PlayLabel::moveCard(QPoint &position)
     cardWrapper->setPos(position);
 }
 
-void PlayLabel::setContext(QGraphicsProxyWidget *wrapper, Pasians *pasians)
+void PlayLabel::setWrapper(QGraphicsProxyWidget *wrapper)
 {
     cardWrapper = wrapper;
-    gameWindow = pasians;
 }
 
 void PlayLabel::setPos(QPoint &point)

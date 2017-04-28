@@ -107,7 +107,7 @@ PlayLabel *Pasians::drawCard(Card &card, QSize &cardSize)
 
     QGraphicsProxyWidget *w = scene->addWidget(lbl);
 
-    lbl->setContext(w, this);
+    lbl->setWrapper(w);
 
     return lbl;
 }
@@ -117,7 +117,7 @@ PlayLabel *Pasians::drawCard(Card &card, QSize &cardSize)
  */
 GGame *Pasians::generateGame()
 {
-    GGame *game = new GGame();
+    GGame *game = new GGame(this);
     game->setup();
     return game;
 }
@@ -183,13 +183,13 @@ void Pasians::showGame(GGame *game, Layout &layout)
         for (auto &card: game->pickPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.pick);
-            w->setCard(card, game->pickPile);
+            w->setCard(card, game->pickPile, game);
         }
 
         for (auto &card: game->dropPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.drop);
-            w->setCard(card, game->dropPile);
+            w->setCard(card, game->dropPile, game);
         }
 
         QPoint botPos = layout.bot;
@@ -197,7 +197,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
             for (auto &card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
-                w->setCard(card, pile);
+                w->setCard(card, pile, game);
             }
             botPos.setX(botPos.x() + layout.cardWidth + layout.wspace);
         }
@@ -207,7 +207,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
             for (auto &card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
-                w->setCard(card, pile);
+                w->setCard(card, pile, game);
             }
             topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
         }
