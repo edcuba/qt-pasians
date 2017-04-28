@@ -1,8 +1,9 @@
 #include "playlabel.h"
 #include <QMouseEvent>
 #include <QGraphicsProxyWidget>
-#include <QPoint>
+#include <QPointF>
 #include <algorithm>
+#include <QSize>
 
 #include <iostream>
 
@@ -36,11 +37,18 @@ void PlayLabel::setZ(int z)
 
 void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 {
-    //this is card relative position
-    //TODO - get total position
-    Pile *pile = game->pileAt(event->pos());
+    Q_UNUSED(event);
+    QPointF p = cardWrapper->pos();
+    QSize s = size();
+    p.setX(p.x() + s.width() / 2);
+    p.setY(p.y() + s.height() / 2);
+    Pile *pile = game->pileAt(p);
     if (pile) {
-        //move cards to other pile
+        for (auto &card: childs) {
+            PlayLabel *l = static_cast<PlayLabel *>(card->parent);
+            l->changePile(pile);
+        }
+        changePile(pile);
     }
     game->redraw();
 
@@ -100,6 +108,17 @@ void PlayLabel::setPile(Pile *pile)
 
 void PlayLabel::changePile(Pile *pile)
 {
-    Q_UNUSED(pile);
+    unsigned index = 0;
+    vector<Card>& thisPile = actualPile->cards;
+    for (Card &card: thisPile) {
+        if ((PlayLabel *)card.parent == this) {
+            break;
+        }
+        index++;
+    }
+    Card c = thisPile[index];
+    thisPile.erase(thisPile.begin() + index);
+    actualPile = pile;
+    actualPile->add(c);
 }
 

@@ -1,7 +1,7 @@
 #ifndef GGAME_H
 #define GGAME_H
 
-#include <QPoint>
+#include <QPointF>
 #include <QRectF>
 
 class GGame;
@@ -17,7 +17,7 @@ public:
     void start();
     void redraw();
     bool initialized() const;
-    Pile *pileAt(const QPoint &point);
+    Pile *pileAt(const QPointF &point);
     QRectF getPileBoundaries(Pile &pile);
 private:
     bool isInitialized = false;

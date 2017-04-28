@@ -41,7 +41,7 @@ QRectF GGame::getPileBoundaries(Pile &pile)
     return area;
 }
 
-Pile *GGame::pileAt(const QPoint &point)
+Pile *GGame::pileAt(const QPointF &point)
 {
     for (auto &pile: bottomPiles){
         QRectF p = getPileBoundaries(pile);
