@@ -1,6 +1,5 @@
 #include "pasians.h"
 #include "ui_pasians.h"
-#include <QPixmap>
 #include <QSize>
 #include <QResizeEvent>
 #include <QGraphicsScene>
@@ -39,6 +38,10 @@ void Pasians::resizeEvent(QResizeEvent* event)
 {
     Layout layout(event->size());
 
+    view->setSceneRect(scene->sceneRect());
+
+    view->centerOn(0, 0);
+
     showGames(layout);
 }
 
@@ -66,15 +69,6 @@ void Pasians::showGames(Layout &layout)
     }
 }
 
-/**
- * @brief Pasians::hashCard Calculate card identificator
- * @param card game card
- * @return card identificator
- */
-string Pasians::hashCard(Card &card)
-{
-    return to_string((int) card.type) + "-" + to_string((int) card.color);
-}
 
 /**
  * @brief Pasians::drawCard draw single card
@@ -85,25 +79,10 @@ string Pasians::hashCard(Card &card)
  */
 PlayLabel *Pasians::drawCard(Card &card, QSize &cardSize)
 {
-    PlayLabel *lbl = new PlayLabel();
+    PlayLabel *lbl = new PlayLabel(card, cardSize);
 
-    string type = "none";
+    lbl->setAttribute(Qt::WA_TranslucentBackground);
 
-    if (card.visible){
-        type = hashCard(card);
-    }
-
-    string path;
-
-    path = cardImg.find(type)->second;
-
-    QPixmap img(path.c_str());
-
-    lbl->setPixmap(img);
-
-    lbl->setScaledContents(true);
-
-    lbl->setFixedSize(cardSize);
 
     QGraphicsProxyWidget *w = scene->addWidget(lbl);
 
@@ -130,8 +109,6 @@ GGame *Pasians::generateGame()
 void Pasians::showGame(GGame *game, Layout &layout)
 {
     QSize cardSize(layout.cardWidth, layout.cardHeight);
-
-    view->centerOn(0, 0);
 
     PlayLabel *w;
     if (game->initialized()) {
@@ -183,13 +160,13 @@ void Pasians::showGame(GGame *game, Layout &layout)
         for (auto &card: game->pickPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.pick);
-            w->setCard(card, game->pickPile, game);
+            w->setContext(game->pickPile, game);
         }
 
         for (auto &card: game->dropPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.drop);
-            w->setCard(card, game->dropPile, game);
+            w->setContext(game->dropPile, game);
         }
 
         QPoint botPos = layout.bot;
@@ -197,7 +174,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
             for (auto &card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
-                w->setCard(card, pile, game);
+                w->setContext(pile, game);
             }
             botPos.setX(botPos.x() + layout.cardWidth + layout.wspace);
         }
@@ -207,11 +184,12 @@ void Pasians::showGame(GGame *game, Layout &layout)
             for (auto &card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
-                w->setCard(card, pile, game);
+                w->setContext(pile, game);
             }
             topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
         }
 
+        view->setSceneRect(scene->sceneRect());
         game->start();
     }
     activeLayout = layout;

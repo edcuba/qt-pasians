@@ -37,7 +37,6 @@ public:
 class Pile : public Heap {
 public:
     int type;
-    pair<int, int> position {0, 0}; // x,y
 };
 
 class Game {

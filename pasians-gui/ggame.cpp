@@ -9,6 +9,16 @@ GGame::GGame(Pasians *pasians)
 
 void GGame::redraw()
 {
+    for (Pile &pile: bottomPiles) {
+        if (pile.cards.empty()) {
+            continue;
+        }
+        Card  &c = pile.cards.back();
+        if (!c.visible) {
+            PlayLabel *l = static_cast<PlayLabel *>(c.parent);
+            l->reveal();
+        }
+    }
     gameWindow->redraw();
 }
 
@@ -41,18 +51,30 @@ QRectF GGame::getPileBoundaries(Pile &pile)
     return area;
 }
 
-Pile *GGame::pileAt(const QPointF &point)
+Pile *GGame::pileAt(const QPointF &point, Pile *ignore)
 {
+    QRectF p = getPileBoundaries(pickPile);
+
+    if (ignore != &pickPile && p.contains(point)) {
+        return &pickPile;
+    }
+
+    p = getPileBoundaries(dropPile);
+
+    if (ignore != &dropPile && p.contains(point)) {
+        return &dropPile;
+    }
+
     for (auto &pile: bottomPiles){
-        QRectF p = getPileBoundaries(pile);
-        if (p.contains(point)) {
+        p = getPileBoundaries(pile);
+        if (ignore != &pile && p.contains(point)) {
             return &pile;
         }
     }
 
     for (auto &pile: topPiles){
-        QRectF p = getPileBoundaries(pile);
-        if (p.contains(point)) {
+        p = getPileBoundaries(pile);
+        if (ignore != &pile && p.contains(point)) {
             return &pile;
         }
     }

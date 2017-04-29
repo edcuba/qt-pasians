@@ -17,7 +17,7 @@ public:
     void start();
     void redraw();
     bool initialized() const;
-    Pile *pileAt(const QPointF &point);
+    Pile *pileAt(const QPointF &point, Pile *ignore);
     QRectF getPileBoundaries(Pile &pile);
 private:
     bool isInitialized = false;

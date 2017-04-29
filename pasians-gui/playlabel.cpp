@@ -1,17 +1,66 @@
 #include "playlabel.h"
+#include "cards.h"
 #include <QMouseEvent>
 #include <QGraphicsProxyWidget>
 #include <QPointF>
 #include <algorithm>
 #include <QSize>
+#include <QPixmap>
 
 #include <iostream>
 
-PlayLabel::PlayLabel() {}
+PlayLabel::PlayLabel(Card &card, QSize &cardSize)
+{
+    card.parent = this;
+    gameCard = &card;
+
+    updateImage();
+    setFixedSize(cardSize);
+}
+
+void PlayLabel::updateImage()
+{
+    string type = "none";
+
+    if (gameCard->visible){
+        type = hash();
+    }
+
+    string path = cardImg.find(type)->second;
+
+    QPixmap img(path.c_str());
+
+    setPixmap(img);
+
+    setScaledContents(true);
+}
+
+void PlayLabel::reveal()
+{
+    if (!gameCard->visible) {
+        gameCard->visible = true;
+        updateImage();
+    }
+}
 
 void PlayLabel::mousePressEvent(QMouseEvent * event)
 {
     childs.clear();
+
+    QSize s = size();
+    QPointF p = cardWrapper->pos();
+
+    p.setX(p.x() + s.width() / 2);
+    p.setY(p.y() + s.height() / 2);
+
+    Pile *pile = game->pileAt(p, NULL);
+
+    if (pile->type == 0) {
+        changePile(&game->dropPile);
+        reveal();
+        game->redraw();
+        return;
+    }
 
     unsigned index = 0;
     vector<Card>& thisPile = actualPile->cards;
@@ -42,12 +91,8 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
     QSize s = size();
     p.setX(p.x() + s.width() / 2);
     p.setY(p.y() + s.height() / 2);
-    Pile *pile = game->pileAt(p);
-    if (pile) {
-        for (auto &card: childs) {
-            PlayLabel *l = static_cast<PlayLabel *>(card->parent);
-            l->changePile(pile);
-        }
+    Pile *pile = game->pileAt(p, actualPile);
+    if (pile && pile->type > 1) {
         changePile(pile);
     }
     game->redraw();
@@ -74,13 +119,9 @@ void PlayLabel::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void PlayLabel::setCard(Card &card, Pile &pile, GGame *ggame)
+void PlayLabel::setContext(Pile &pile, GGame *ggame)
 {
-    card.parent = this;
-
-    gameCard = &card;
     actualPile = &pile;
-
     game = ggame;
 }
 
@@ -108,17 +149,33 @@ void PlayLabel::setPile(Pile *pile)
 
 void PlayLabel::changePile(Pile *pile)
 {
-    unsigned index = 0;
     vector<Card>& thisPile = actualPile->cards;
+
+    unsigned index = 0;
+
     for (Card &card: thisPile) {
         if ((PlayLabel *)card.parent == this) {
             break;
         }
         index++;
     }
-    Card c = thisPile[index];
-    thisPile.erase(thisPile.begin() + index);
+    vector<Card> toMove(thisPile.begin() + index, thisPile.end());
+    thisPile.erase(thisPile.begin() + index, thisPile.end());
+
     actualPile = pile;
-    actualPile->add(c);
+    actualPile->add(toMove);
+
+    for (auto &card: actualPile->cards) {
+        PlayLabel *l = static_cast<PlayLabel *>(card.parent);
+        l->actualPile = pile;
+        l->gameCard = &card;
+    }
+
+
+}
+
+string PlayLabel::hash()
+{
+    return to_string((int) gameCard->type) + "-" + to_string((int) gameCard->color);
 }
 

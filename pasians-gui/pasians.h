@@ -19,7 +19,6 @@ class Pasians;
 
 #include "playlabel.h"
 #include "layout.h"
-#include "cards.h"
 #include "ggame.h"
 
 class Pasians : public QMainWindow
@@ -44,7 +43,6 @@ private:
     GGame *generateGame();
     void showGame(GGame *game, Layout &layout);
     PlayLabel *drawCard(Card &card, QSize &cardSize);
-    string hashCard(Card &card);
 
     Layout activeLayout;
 

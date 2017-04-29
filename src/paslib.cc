@@ -27,10 +27,8 @@ void Game::setup()
     for (auto &card: cards) { //just random setup for debugging - replace this
         switch (i) {
         case 0:
-            pickPile.add(card);
-            break;
         case 1:
-            dropPile.add(card);
+            pickPile.add(card);
             break;
         case 2:
             topPiles[0].add(card);
@@ -70,14 +68,17 @@ void Game::setup()
         }
         i++;
     }
-    pickPile.showTop();
-    dropPile.showTop();
-    for (auto &pile: bottomPiles) {
-        pile.showTop();
-    }
+    pickPile.type = 0;
+    dropPile.type = 1;
     for (auto &pile: topPiles) {
         pile.showTop();
+        pile.type = 2;
     }
+    for (auto &pile: bottomPiles) {
+        pile.showTop();
+        pile.type = 3;
+    }
+
 }
 
 /**

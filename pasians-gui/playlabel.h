@@ -16,21 +16,22 @@ class PlayLabel : public QLabel
     Q_OBJECT
 
 public:
-    PlayLabel();
+    PlayLabel(Card &card, QSize &cardSize);
     void setWrapper(QGraphicsProxyWidget *wrapper);
-
     void setPos(QPoint &point);
     void setPile(Pile *pile);
     void changePile(Pile *pile);
-    void setCard(Card &card, Pile &pile, GGame *ggame);
+    void setContext(Pile &pile, GGame *ggame);
     void setZ(int z);
+    string hash();
+    void reveal();
 
 protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-
     void moveCard(QPoint &position);
+    void updateImage();
 
 private:
     QGraphicsProxyWidget *cardWrapper = NULL;
