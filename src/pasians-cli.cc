@@ -192,6 +192,13 @@ int Cli::printHelp(vector<string> &attributes)
 
 }
 
+int Cli::draw(vector<string> &attributes)
+{
+    games[0].draw();
+    printState(games[0]);
+    return 0;
+}
+
 int main()
 {
     Cli cli;

@@ -21,53 +21,22 @@ Card::Card(char _type, char _color)
 void Game::setup()
 {
     vector<Card> cards = getCards();
-
-    //TODO: setup piles
     int i = 0;
-    for (auto &card: cards) { //just random setup for debugging - replace this
-        switch (i) {
-        case 0:
-        case 1:
-            pickPile.add(card);
-            break;
-        case 2:
-            topPiles[0].add(card);
-            break;
-        case 3:
-            topPiles[1].add(card);
-            break;
-        case 4:
-            topPiles[2].add(card);
-            break;
-        case 5:
-            topPiles[3].add(card);
-            break;
-        case 6:
-            bottomPiles[0].add(card);
-            break;
-        case 7:
-            bottomPiles[1].add(card);
-            break;
-        case 8:
-            bottomPiles[2].add(card);
-            break;
-        case 9:
-            bottomPiles[3].add(card);
-            break;
-        case 10:
-            bottomPiles[4].add(card);
-            break;
-        case 11:
-            bottomPiles[5].add(card);
-            break;
-        case 12:
-            bottomPiles[6].add(card);
-            break;
-        default:
-            i = -1;
-        }
-        i++;
+    for (auto &card: cards)
+    {
+    if (i < 7)
+    {
+        for (int j=i; j < 7; ++j)
+            bottomPiles[j].add(card);
     }
+    else
+    {
+        pickPile.add(card);
+    }
+    ++i;
+}
+
+
     pickPile.type = 0;
     dropPile.type = 1;
     for (auto &pile: topPiles) {
@@ -79,6 +48,99 @@ void Game::setup()
         pile.type = 3;
     }
 
+}
+
+Move::Move(Pile *_from, Pile *_where)
+{
+    from = _from;
+    where = _where;
+}
+
+int Game::move(Pile *from, Pile *where, int index)
+{
+    Move save(from, where);
+    vector<Card> moving(from->cards.begin() + index, from->cards.end());
+    save.number = moving.size();
+    switch (where->type) {
+        case 2:
+            if (moving.size() != 1)
+                return 0;
+            if (where->cards.size() && moving[0].type == 14)
+                return 0;
+
+            if (where->cards.size())
+            {
+                if (where->cards.back().color != moving[0].color ||
+                    where->cards.back().type != moving[0].type + 1)
+                    return 0;
+            }
+            break;
+
+        case 3:
+            if ((where->cards.size() && moving[0].type == 13))
+                return 0;
+
+            if (where->cards.size())
+            {
+                if ((where->cards.back().color + moving[0].color) % 2 ||
+                    where->cards.back().type != moving[0].type + 1)
+                    return 0;
+            }
+            break;
+        default:
+            return 0;
+    }
+    from->cards.erase(from->cards.begin() + index, from->cards.end());
+    where->add(moving);
+    if (from->cards.size() && !from->cards.back().visible)
+    {
+        from->cards.back().visible = true;
+        save.turned = true;
+    }
+
+    for (auto &pile: this->bottomPiles)
+    {
+        if (pile.cards.size())
+            break;
+        return 2;
+    }
+
+    this->moves.push_back(save);
+
+    return 1;
+}
+
+void Game::draw()
+{
+    if (this->pickPile.cards.size())
+    {
+        Card tmp = this->pickPile.cards.back();
+        tmp.visible = true;
+        this->dropPile.cards.push_back(tmp);
+        this->pickPile.cards.pop_back();
+    }
+    else
+    {
+        if (!this->dropPile.cards.size())
+            return;
+
+        for (auto card = this->dropPile.cards.rbegin();
+             card != this->dropPile.cards.rend(); ++card)
+        {
+            card->visible = false;
+            this->pickPile.cards.push_back(*card);
+        }
+        this->dropPile.cards.erase(this->dropPile.cards.begin(),
+                                   this->dropPile.cards.end());
+    }
+}
+
+void Game::undo()
+{
+    if (!this->moves.size())
+        return
+
+    
 }
 
 /**
@@ -95,6 +157,7 @@ vector<Card> Game::getCards()
         c++;
         c %= 4;
     }
+    random_shuffle(pile.begin(), pile.end());
     return pile;
 }
 

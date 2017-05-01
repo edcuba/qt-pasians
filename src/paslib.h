@@ -12,6 +12,8 @@
 #include <utility>
 #include <vector>
 
+#include <algorithm>
+
 using namespace std;
 
 class Card {
@@ -19,7 +21,6 @@ public:
     char type {0};   // 2-10, J (11), Q (12), K (13), A (14)
     char color {4};  // 0-3, hearts, clubs, diamonds, spades
     bool visible {false};
-    bool move(int x, int y);
     Card(char _type, char _color);
     void *parent;
 };
@@ -36,7 +37,17 @@ public:
 
 class Pile : public Heap {
 public:
-    int type;
+    int type; // 0-> pickPile , 1->dropPile,  2->toppiles, 3->bottomPiles
+};
+
+class Move
+{
+public:
+    Pile *from;
+    Pile *where;
+    int number;
+    bool turned = false;
+    Move(Pile *_from, Pile *_where);
 };
 
 class Game {
@@ -45,10 +56,14 @@ public:
     void reset();
     void load();
 
+    int move(Pile *from, Pile *where, int index);
+    void draw();
+    void undo();
     vector<Pile> bottomPiles{7};
     vector<Pile> topPiles{4};
     Pile pickPile;
     Pile dropPile;
+    vector<Move> moves;
 
 protected:
     void generateDeck();

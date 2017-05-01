@@ -39,11 +39,13 @@ protected:
     static int newGame(vector<string> &attributes);
     static int exitGame(vector<string> &attributes);
     static int printHelp(vector<string> &attributes);
+    static int draw(vector<string> &attributes);
 
     const unordered_map<string, int (*)(vector<string> &)> commands {
         {"new", *Cli::newGame},
         {"exit", *Cli::exitGame},
-        {"help", *Cli::printHelp}
+        {"help", *Cli::printHelp},
+        {"draw", *Cli::draw}
     };
 };
 
@@ -51,6 +53,7 @@ const map<string, string> helpList {
     {"new",  "       \t\tStart new game."},
     {"exit", " [save]\t\tExit. Add save to keep the game status."},
     {"help", " [cmd] \t\tPrint this list. Add command name to print only its record."}
+    //{"move", "sss"}
 };
 
 // 2-10, J (11), Q (12), K (13), A (14)
