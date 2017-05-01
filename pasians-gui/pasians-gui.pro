@@ -16,15 +16,17 @@ SOURCES += main.cpp\
         pasians.cpp\
         ../src/paslib.cc \
         playlabel.cpp \
-    layout.cpp \
-    ggame.cpp
+        layout.cpp \
+        ggame.cpp \
+        ../src/jsoncpp.cpp
 
 HEADERS  += pasians.h \
         ../src/paslib.h \
         playlabel.h \
-    layout.h \
-    cards.h \
-    ggame.h
+        layout.h \
+        cards.h \
+        ggame.h \
+        ../src/json/json.h
 
 FORMS    += pasians.ui
 

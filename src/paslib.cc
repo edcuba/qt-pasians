@@ -140,7 +140,7 @@ void Game::undo()
     if (!this->moves.size())
         return
 
-    
+
 }
 
 /**
@@ -177,4 +177,12 @@ void Heap::showTop()
     if (!cards.empty()) {
         cards.back().visible = true;
     }
+}
+
+void Game::load()
+{
+    Json::Value yolo;
+    yolo["pasians"].append("Game1");
+
+    cout << yolo << endl;
 }
