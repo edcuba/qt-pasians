@@ -21,7 +21,6 @@ Card::Card(char _type, char _color)
 void Game::setup()
 {
     vector<Card> cards = getCards();
-
     //TODO: setup piles
     int i = 0;
     for (auto &card: cards) { //just random setup for debugging - replace this
@@ -114,4 +113,12 @@ void Heap::showTop()
     if (!cards.empty()) {
         cards.back().visible = true;
     }
+}
+
+void Game::load()
+{
+    Json::Value yolo;
+    yolo["pasians"].append("Game1");
+
+    cout << yolo << endl;
 }
