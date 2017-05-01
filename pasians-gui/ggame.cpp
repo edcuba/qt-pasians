@@ -14,10 +14,8 @@ void GGame::redraw()
             continue;
         }
         Card  &c = pile.cards.back();
-        if (!c.visible) {
-            PlayLabel *l = static_cast<PlayLabel *>(c.parent);
-            l->reveal();
-        }
+        PlayLabel *l = static_cast<PlayLabel *>(c.parent);
+        l->reveal();
     }
     gameWindow->redraw();
 }

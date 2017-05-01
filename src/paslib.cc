@@ -71,6 +71,7 @@ Move::Move(Pile *_from, Pile *_where)
 
 int Game::move(Pile *from, Pile *where, int index)
 {
+    cout << "in" << endl;
     Move save(from, where);
     vector<Card> moving(from->cards.begin() + index, from->cards.end());
     save.number = moving.size();
@@ -78,10 +79,10 @@ int Game::move(Pile *from, Pile *where, int index)
         case 2:
             if (moving.size() != 1)
                 return 0;
-            if (where->cards.size() && moving[0].type == 14)
+            if (!where->cards.empty() && moving[0].type == 14)
                 return 0;
 
-            if (where->cards.size())
+            if (!where->cards.empty())
             {
                 if (where->cards.back().color != moving[0].color ||
                     where->cards.back().type != moving[0].type + 1)
@@ -90,17 +91,26 @@ int Game::move(Pile *from, Pile *where, int index)
             break;
 
         case 3:
-            if ((where->cards.size() && moving[0].type == 13))
-                return 0;
+        cout << "case 3" << endl;
 
-            if (where->cards.size())
+            if ((!where->cards.empty() && moving[0].type == 13)) {
+                cout << "case A" << endl;
+                return 0;
+            }
+
+            if (!where->cards.empty())
             {
-                if ((where->cards.back().color + moving[0].color) % 2 ||
-                    where->cards.back().type != moving[0].type + 1)
+                if ((where->cards.back().color + moving[0].color) % 2 == 0 ||
+                    where->cards.back().type != moving[0].type + 1) {
+
+                    cout << (int) where->cards.back().color << " " << (int)moving[0].color << endl;
+                    cout << "case B" << endl;
                     return 0;
+                }
             }
             break;
         default:
+            cout << "case C" << endl;
             return 0;
     }
     from->cards.erase(from->cards.begin() + index, from->cards.end());
@@ -111,80 +121,80 @@ int Game::move(Pile *from, Pile *where, int index)
         save.turned = true;
     }
 
-    for (auto &pile: this->bottomPiles)
+    for (auto &pile: bottomPiles)
     {
         if (pile.cards.size())
             break;
         return 2;
     }
 
-    this->moves.push_back(save);
+    moves.push_back(save);
 
     return 1;
 }
 
 void Game::draw()
 {
-    if (this->pickPile.cards.size())
+    if (pickPile.cards.size())
     {
-        Card tmp = this->pickPile.cards.back();
+        Card tmp = pickPile.cards.back();
         tmp.visible = true;
-        this->dropPile.cards.push_back(tmp);
-        this->pickPile.cards.pop_back();
+        dropPile.cards.push_back(tmp);
+        pickPile.cards.pop_back();
 
-        Move save(&(this->pickPile), &(this->dropPile));
-        this->moves.push_back(save);
+        Move save(&(pickPile), &(dropPile));
+        moves.push_back(save);
     }
     else
     {
-        if (!this->dropPile.cards.size())
+        if (!dropPile.cards.size())
             return;
 
 
-        for (auto card = this->dropPile.cards.rbegin();
-             card != this->dropPile.cards.rend(); ++card)
+        for (auto card = dropPile.cards.rbegin();
+             card != dropPile.cards.rend(); ++card)
         {
             card->visible = false;
-            this->pickPile.cards.push_back(*card);
+            pickPile.cards.push_back(*card);
         }
-        this->dropPile.cards.erase(this->dropPile.cards.begin(),
-                                   this->dropPile.cards.end());
+        dropPile.cards.erase(dropPile.cards.begin(),
+                                   dropPile.cards.end());
 
-       Move save(&(this->dropPile), &(this->pickPile));
-       this->moves.push_back(save);
+       Move save(&(dropPile), &(pickPile));
+       moves.push_back(save);
     }
 }
 
 void Game::undo()
 {
-    if (!this->moves.size())
+    if (!moves.size())
         return;
 
-    Move last = this->moves.back();
+    Move last = moves.back();
 
-    if (last.from  == &(this->pickPile))
+    if (last.from  == &(pickPile))
     {
-        Card card = this->dropPile.cards.back();
+        Card card = dropPile.cards.back();
         card.visible = false;
-        this->pickPile.add(card);
-        this->dropPile.cards.pop_back();
-        return;
-    }
-
-    if (last.from  == &(this->dropPile) &&
-        last.where == &(this->pickPile))
+        pickPile.add(card);
+        dropPile.cards.pop_back();
+    } else if (last.from  == &(dropPile) &&
+        last.where == &(pickPile))
     {
-        for (auto card = this->pickPile.cards.rbegin();
-             card != this->pickPile.cards.rend(); ++card)
+        for (auto card = pickPile.cards.rbegin();
+             card != pickPile.cards.rend(); ++card)
         {
             card->visible = true;
-            this->dropPile.cards.push_back(*card);
+            dropPile.cards.push_back(*card);
         }
 
-        this->pickPile.cards.erase(this->pickPile.cards.begin(),
-                                   this->pickPile.cards.end());
+        pickPile.cards.erase(pickPile.cards.begin(),
+                             pickPile.cards.end());
         return;
     }
+
+    moves.pop_back();
+
     /*
     if (last.turned)
         last.from->cards.back().visible = false;

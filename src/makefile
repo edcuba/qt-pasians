@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS = -std=c++11 -Wall -Wextra
+CFLAGS = -std=c++11 -Wall -Wextra -O0 -g
 default: pasians-cli
 
 json.o: jsoncpp.cpp

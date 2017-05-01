@@ -33,6 +33,8 @@ protected:
     void moveCard(QPoint &position);
     void updateImage();
 
+    bool cardVisible = false;
+
 private:
     QGraphicsProxyWidget *cardWrapper = NULL;
     Pile *actualPile = NULL;

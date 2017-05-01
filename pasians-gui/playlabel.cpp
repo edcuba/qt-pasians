@@ -37,8 +37,9 @@ void PlayLabel::updateImage()
 
 void PlayLabel::reveal()
 {
-    if (!gameCard->visible) {
+    if (!cardVisible) {
         gameCard->visible = true;
+        cardVisible = true;
         updateImage();
     }
 }
@@ -56,7 +57,7 @@ void PlayLabel::mousePressEvent(QMouseEvent * event)
     Pile *pile = game->pileAt(p, NULL);
 
     if (pile->type == 0) {
-        changePile(&game->dropPile);
+        game->draw();
         reveal();
         game->redraw();
         return;
@@ -159,11 +160,16 @@ void PlayLabel::changePile(Pile *pile)
         }
         index++;
     }
-    vector<Card> toMove(thisPile.begin() + index, thisPile.end());
-    thisPile.erase(thisPile.begin() + index, thisPile.end());
+
+    switch (game->move(actualPile, pile, index)) {
+    case 1:
+    case 2:
+        break;
+    default:
+        return;
+    }
 
     actualPile = pile;
-    actualPile->add(toMove);
 
     for (auto &card: actualPile->cards) {
         PlayLabel *l = static_cast<PlayLabel *>(card.parent);
