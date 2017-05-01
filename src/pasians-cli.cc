@@ -199,6 +199,13 @@ int Cli::draw(vector<string> &attributes)
     return 0;
 }
 
+int Cli::undo(vector<string> &attributes)
+{
+    games[0].undo();
+    printState(games[0]);
+    return 0;
+}
+
 int main()
 {
     Cli cli;

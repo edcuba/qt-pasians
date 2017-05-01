@@ -24,17 +24,30 @@ void Game::setup()
     int i = 0;
     for (auto &card: cards)
     {
-    if (i < 7)
-    {
-        for (int j=i; j < 7; ++j)
-            bottomPiles[j].add(card);
+        if (i < 28)
+        {
+
+            if (i < 1)
+                bottomPiles[0].add(card);
+            else if (i < 3)
+                bottomPiles[1].add(card);
+            else if (i < 6)
+                bottomPiles[2].add(card);
+            else if (i < 10)
+                bottomPiles[3].add(card);
+            else if (i < 15)
+                bottomPiles[4].add(card);
+            else if (i < 21)
+                bottomPiles[5].add(card);
+            else
+                bottomPiles[6].add(card);
+        }
+        else
+        {
+            pickPile.add(card);
+        }
+        ++i;
     }
-    else
-    {
-        pickPile.add(card);
-    }
-    ++i;
-}
 
 
     pickPile.type = 0;
@@ -118,11 +131,15 @@ void Game::draw()
         tmp.visible = true;
         this->dropPile.cards.push_back(tmp);
         this->pickPile.cards.pop_back();
+
+        Move save(&(this->pickPile), &(this->dropPile));
+        this->moves.push_back(save);
     }
     else
     {
         if (!this->dropPile.cards.size())
             return;
+
 
         for (auto card = this->dropPile.cards.rbegin();
              card != this->dropPile.cards.rend(); ++card)
@@ -132,13 +149,46 @@ void Game::draw()
         }
         this->dropPile.cards.erase(this->dropPile.cards.begin(),
                                    this->dropPile.cards.end());
+
+       Move save(&(this->dropPile), &(this->pickPile));
+       this->moves.push_back(save);
     }
 }
 
 void Game::undo()
 {
     if (!this->moves.size())
-        return
+        return;
+
+    Move last = this->moves.back();
+
+    if (last.from  == &(this->pickPile))
+    {
+        Card card = this->dropPile.cards.back();
+        card.visible = false;
+        this->pickPile.add(card);
+        this->dropPile.cards.pop_back();
+        return;
+    }
+
+    if (last.from  == &(this->dropPile) &&
+        last.where == &(this->pickPile))
+    {
+        for (auto card = this->pickPile.cards.rbegin();
+             card != this->pickPile.cards.rend(); ++card)
+        {
+            card->visible = true;
+            this->dropPile.cards.push_back(*card);
+        }
+
+        this->pickPile.cards.erase(this->pickPile.cards.begin(),
+                                   this->pickPile.cards.end());
+        return;
+    }
+    /*
+    if (last.turned)
+        last.from->cards.back().visible = false;
+        */
 
 
 }

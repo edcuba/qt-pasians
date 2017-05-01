@@ -46,7 +46,7 @@ class Move
 public:
     Pile *from;
     Pile *where;
-    int number;
+    int number = 0;
     bool turned = false;
     Move(Pile *_from, Pile *_where);
 };
