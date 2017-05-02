@@ -56,6 +56,10 @@ void PlayLabel::mousePressEvent(QMouseEvent * event)
 
     Pile *pile = game->pileAt(p, NULL);
 
+    if (!pile) {
+        return;
+    }
+
     if (pile->type == 0) {
         game->draw();
         reveal();
@@ -88,6 +92,9 @@ void PlayLabel::setZ(int z)
 void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+    if (gameCard->type == 0) {
+        return;
+    }
     QPointF p = cardWrapper->pos();
     QSize s = size();
     p.setX(p.x() + s.width() / 2);
@@ -102,6 +109,9 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 
 void PlayLabel::mouseMoveEvent(QMouseEvent *event)
 {
+    if (gameCard->type == 0) {
+        return;
+    }
     QPoint pos;
     int height = size().height();
     int z = 100;

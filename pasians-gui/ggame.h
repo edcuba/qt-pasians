@@ -3,12 +3,14 @@
 
 #include <QPointF>
 #include <QRectF>
+#include <QGraphicsScene>
 
 class GGame;
 
 #include "../src/paslib.h"
 #include "pasians.h"
 #include "playlabel.h"
+#include "layout.h"
 
 class GGame : public Game
 {
@@ -19,6 +21,7 @@ public:
     bool initialized() const;
     Pile *pileAt(const QPointF &point, Pile *ignore);
     QRectF getPileBoundaries(Pile &pile);
+    void setupPlaceHolders(Layout &layout, QGraphicsScene *scene);
 private:
     bool isInitialized = false;
     Pasians *gameWindow = NULL;

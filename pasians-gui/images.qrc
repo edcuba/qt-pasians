@@ -56,5 +56,6 @@
         <file>res/queen_of_spades.png</file>
         <file>res/red_joker.png</file>
         <file>res/none.png</file>
+        <file>res/placeholder.png</file>
     </qresource>
 </RCC>

@@ -31,4 +31,8 @@ Layout::Layout(const QSize &size)
 
     top.setX(drop.x() + 2 * (cardWidth + wspace));
     top.setY(pick.y());
+
+    cardSize.setWidth(cardWidth);
+    cardSize.setHeight(cardHeight);
+
 }

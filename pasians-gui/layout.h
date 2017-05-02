@@ -13,6 +13,8 @@ public:
     int cardHeight;
     int wspace;
 
+    QSize cardSize;
+
     QPoint pick;
     QPoint drop;
 

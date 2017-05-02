@@ -83,7 +83,6 @@ PlayLabel *Pasians::drawCard(Card &card, QSize &cardSize)
 
     lbl->setAttribute(Qt::WA_TranslucentBackground);
 
-
     QGraphicsProxyWidget *w = scene->addWidget(lbl);
 
     lbl->setWrapper(w);
@@ -108,9 +107,9 @@ GGame *Pasians::generateGame()
  */
 void Pasians::showGame(GGame *game, Layout &layout)
 {
-    QSize cardSize(layout.cardWidth, layout.cardHeight);
-
     PlayLabel *w;
+    QSize &cardSize = layout.cardSize;
+
     if (game->initialized()) {
 
         int z = 0;
@@ -188,6 +187,8 @@ void Pasians::showGame(GGame *game, Layout &layout)
             }
             topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
         }
+
+        game->setupPlaceHolders(layout, scene);
 
         view->setSceneRect(scene->sceneRect());
         game->start();
