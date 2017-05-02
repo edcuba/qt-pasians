@@ -7,22 +7,28 @@
 #include <QSize>
 #include <QPixmap>
 
+#define DEBUGMODE true
+
 #include <iostream>
 
-PlayLabel::PlayLabel(Card &card, QSize &cardSize)
+PlayLabel::PlayLabel(Card *card, QSize &cardSize)
 {
-    card.parent = this;
-    gameCard = &card;
+    card->parent = this;
+    gameCard = card;
+
+    cardVisible = card->visible;
 
     updateImage();
     setFixedSize(cardSize);
+
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 void PlayLabel::updateImage()
 {
     string type = "none";
 
-    if (gameCard->visible){
+    if (cardVisible){
         type = hash();
     }
 
@@ -44,9 +50,19 @@ void PlayLabel::reveal()
     }
 }
 
+void PlayLabel::hide()
+{
+    if (cardVisible) {
+        gameCard->visible = false;
+        cardVisible = false;
+        updateImage();
+    }
+}
+
 void PlayLabel::mousePressEvent(QMouseEvent * event)
 {
     childs.clear();
+    drawing = false;
 
     QSize s = size();
     QPointF p = cardWrapper->pos();
@@ -62,15 +78,28 @@ void PlayLabel::mousePressEvent(QMouseEvent * event)
 
     if (pile->type == 0) {
         game->draw();
-        reveal();
+        if (placeHolder) {
+            for (Card &card: game->pickPile.cards) {
+                PlayLabel *l = static_cast<PlayLabel *>(card.parent);
+                l->hide();
+            }
+        } else {
+            reveal();
+            actualPile = &game->dropPile;
+        }
+        drawing = true;
         game->redraw();
+        return;
+    }
+
+    if (!cardVisible) {
         return;
     }
 
     unsigned index = 0;
     vector<Card>& thisPile = actualPile->cards;
     for (Card &card: thisPile) {
-        if ((PlayLabel *)card.parent == this) {
+        if (card.parent == this) {
             break;
         }
         index++;
@@ -92,17 +121,36 @@ void PlayLabel::setZ(int z)
 void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+
     if (gameCard->type == 0) {
         return;
     }
+
+    if (!cardVisible || drawing) {
+        return;
+    }
+
+    if (DEBUGMODE) {
+        cout << "Moving " << hash() << endl;
+    }
+
     QPointF p = cardWrapper->pos();
     QSize s = size();
     p.setX(p.x() + s.width() / 2);
     p.setY(p.y() + s.height() / 2);
     Pile *pile = game->pileAt(p, actualPile);
+
     if (pile && pile->type > 1) {
+        if (DEBUGMODE) {
+            cout << "Target pile type " << pile->type << endl;
+        }
         changePile(pile);
+    } else if (DEBUGMODE) {
+        cout << "No pile" << endl;
     }
+
+
+
     game->redraw();
 
 }
@@ -112,6 +160,11 @@ void PlayLabel::mouseMoveEvent(QMouseEvent *event)
     if (gameCard->type == 0) {
         return;
     }
+
+    if (!cardVisible || drawing) {
+        return;
+    }
+
     QPoint pos;
     int height = size().height();
     int z = 100;
@@ -123,16 +176,16 @@ void PlayLabel::mouseMoveEvent(QMouseEvent *event)
         for (Card *child: childs) {
             z++;
             pos.setY(pos.y() + height / cardOffsetMod);
-            PlayLabel *l = (PlayLabel *) child->parent;
+            PlayLabel *l = static_cast<PlayLabel *>(child->parent);
             l->moveCard(pos);
             l->setZ(z);
         }
     }
 }
 
-void PlayLabel::setContext(Pile &pile, GGame *ggame)
+void PlayLabel::setContext(Pile *pile, GGame *ggame)
 {
-    actualPile = &pile;
+    actualPile = pile;
     game = ggame;
 }
 
@@ -193,5 +246,10 @@ void PlayLabel::changePile(Pile *pile)
 string PlayLabel::hash()
 {
     return to_string((int) gameCard->type) + "-" + to_string((int) gameCard->color);
+}
+
+void PlayLabel::setPlaceHolder()
+{
+    placeHolder = true;
 }
 

@@ -79,9 +79,7 @@ void Pasians::showGames(Layout &layout)
  */
 PlayLabel *Pasians::drawCard(Card &card, QSize &cardSize)
 {
-    PlayLabel *lbl = new PlayLabel(card, cardSize);
-
-    lbl->setAttribute(Qt::WA_TranslucentBackground);
+    PlayLabel *lbl = new PlayLabel(&card, cardSize);
 
     QGraphicsProxyWidget *w = scene->addWidget(lbl);
 
@@ -110,34 +108,45 @@ void Pasians::showGame(GGame *game, Layout &layout)
     PlayLabel *w;
     QSize &cardSize = layout.cardSize;
 
-    if (game->initialized()) {
+    if (game->initialized()) { // allready initialized
 
         int z = 0;
         for (auto &card: game->pickPile.cards) {
             z++;
-            w = (PlayLabel *) card.parent;
+            w = static_cast<PlayLabel *>(card.parent);
             w->setPos(layout.pick);
             w->setZ(z);
         }
 
+        w = static_cast<PlayLabel *>(game->pickPile.placeHolder());
+        w->setPos(layout.pick);
+
         z = 0;
         for (auto &card: game->dropPile.cards) {
             z++;
-            w = (PlayLabel *) card.parent;
+            w = static_cast<PlayLabel *>(card.parent);
             w->setPos(layout.drop);
             w->setZ(z);
         }
 
+        w = static_cast<PlayLabel *>(game->dropPile.placeHolder());
+        w->setPos(layout.drop);
+
         QPoint botPos = layout.bot;
         for (auto &pile: game->bottomPiles) {
             z = 0;
+
+            w = static_cast<PlayLabel *>(pile.placeHolder());
+            w->setPos(botPos);
+
             for (auto &card: pile.cards) {
                 z++;
-                w = (PlayLabel *) card.parent;
+                w = static_cast<PlayLabel *>(card.parent);
                 w->setPos(botPos);
                 botPos.setY(botPos.y() + layout.cardHeight / cardOffsetMod);
                 w->setZ(z);
             }
+
             botPos.setX(botPos.x() + layout.cardWidth + layout.wspace);
             botPos.setY(layout.bot.y());
         }
@@ -145,27 +154,32 @@ void Pasians::showGame(GGame *game, Layout &layout)
         QPoint topPos = layout.top;
         for (auto &pile: game->topPiles) {
             z = 0;
+
+            w = static_cast<PlayLabel *>(pile.placeHolder());
+            w->setPos(topPos);
+
             for (auto &card: pile.cards) {
                 z++;
-                w = (PlayLabel *) card.parent;
+                w = static_cast<PlayLabel *>(card.parent);
                 w->setPos(topPos);
                 w->setZ(z);
             }
+
             topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
         }
 
-    } else {
+    } else { // game initialization
 
         for (auto &card: game->pickPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.pick);
-            w->setContext(game->pickPile, game);
+            w->setContext(&game->pickPile, game);
         }
 
         for (auto &card: game->dropPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.drop);
-            w->setContext(game->dropPile, game);
+            w->setContext(&game->dropPile, game);
         }
 
         QPoint botPos = layout.bot;
@@ -173,7 +187,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
             for (auto &card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
-                w->setContext(pile, game);
+                w->setContext(&pile, game);
             }
             botPos.setX(botPos.x() + layout.cardWidth + layout.wspace);
         }
@@ -183,7 +197,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
             for (auto &card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
-                w->setContext(pile, game);
+                w->setContext(&pile, game);
             }
             topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
         }

@@ -39,7 +39,11 @@ public:
 class Pile : public Heap {
 public:
     int type; // 0-> pickPile , 1->dropPile,  2->toppiles, 3->bottomPiles
-    void *placeHolder = NULL;
+    void setPlaceHolder(void *placeHolder);
+    void *placeHolder() const;
+
+protected:
+    void *_placeHolder = NULL;
 };
 
 class Move

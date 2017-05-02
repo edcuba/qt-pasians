@@ -251,3 +251,14 @@ void Game::load()
 
     cout << yolo << endl;
 }
+
+
+void Pile::setPlaceHolder(void *placeHolder)
+{
+    _placeHolder = placeHolder;
+}
+
+void *Pile::placeHolder() const
+{
+    return _placeHolder;
+}

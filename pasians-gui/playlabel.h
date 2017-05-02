@@ -16,15 +16,17 @@ class PlayLabel : public QLabel
     Q_OBJECT
 
 public:
-    PlayLabel(Card &card, QSize &cardSize);
+    PlayLabel(Card *card, QSize &cardSize);
     void setWrapper(QGraphicsProxyWidget *wrapper);
     void setPos(QPoint &point);
     void setPile(Pile *pile);
     void changePile(Pile *pile);
-    void setContext(Pile &pile, GGame *ggame);
+    void setContext(Pile *pile, GGame *ggame);
     void setZ(int z);
     string hash();
     void reveal();
+    void hide();
+    void setPlaceHolder();
 
 protected:
     void mousePressEvent(QMouseEvent * event);
@@ -35,6 +37,8 @@ protected:
 
     bool cardVisible = false;
 
+    bool placeHolder = false;
+
 private:
     QGraphicsProxyWidget *cardWrapper = NULL;
     Pile *actualPile = NULL;
@@ -43,6 +47,8 @@ private:
     GGame *game = NULL;
 
     vector<Card*> childs;
+
+    bool drawing;
 };
 
 #endif // PLAYLABEL_H

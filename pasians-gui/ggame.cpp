@@ -47,13 +47,10 @@ QRectF GGame::getPileBoundaries(Pile &pile)
         area.setBottom(geo.bottom());
         area.setRight(geo.right());
     } else {
-        /*PlayLabel *l = static_cast<PlayLabel *>(pile.placeHolder);
+        PlayLabel *l = static_cast<PlayLabel *>(pile.placeHolder());
         if (l) {
-            QRectF geo = l->geometry();
-            area.setBottom(geo.bottom());
-            area.setRight(geo.right());
-        }*/
-        //TODO CHECK BOUNDARIES OF PLACEHOLDERS
+            return l->geometry();
+        }
     }
     return area;
 }
@@ -91,10 +88,10 @@ Pile *GGame::pileAt(const QPointF &point, Pile *ignore)
 
 static PlayLabel *setUpWrapper(QSize &size, QPoint &place, QGraphicsScene *scene)
 {
-    Card hold(0, 0);
-    hold.visible = true;
+    Card *hold = new Card(0, 0);
+    hold->visible = true;
     PlayLabel *l = new PlayLabel(hold, size);
-    l->setAttribute(Qt::WA_TranslucentBackground);
+    l->setPlaceHolder();
     QGraphicsProxyWidget *w = scene->addWidget(l);
     l->setWrapper(w);
     l->setPos(place);
@@ -107,29 +104,27 @@ void GGame::setupPlaceHolders(Layout &layout, QGraphicsScene *scene)
     QSize &size = layout.cardSize;
 
     PlayLabel *pick = setUpWrapper(size, layout.pick, scene);
-    pick->setContext(pickPile, this);
-    pickPile.placeHolder = pick;
+    pick->setContext(&pickPile, this);
+    pickPile.setPlaceHolder(pick);
 
     PlayLabel *drop = setUpWrapper(size, layout.drop, scene);
-    drop->setContext(dropPile, this);
-    dropPile.placeHolder = drop;
+    drop->setContext(&dropPile, this);
+    dropPile.setPlaceHolder(drop);
 
-    /*QPoint top = layout.top;
-    for (size_t i = 0; i < topPiles.size(); ++i) {
-        Pile &pile = topPiles[i];
+    QPoint top = layout.top;
+    for (auto &pile: topPiles) {
         PlayLabel *l = setUpWrapper(size, top, scene);
-        l->setContext(pile, this);
-        pile.placeHolder = l;
+        l->setContext(&pile, this);
+        pile.setPlaceHolder(l);
         top.setX(top.x() + layout.cardWidth + layout.wspace);
     }
 
     QPoint bot = layout.bot;
-    for (size_t i = 0; i < bottomPiles.size(); ++i) {
-        Pile &pile = topPiles[i];
+    for (auto &pile: bottomPiles) {
         PlayLabel *l = setUpWrapper(size, bot, scene);
-        l->setContext(pile, this);
-        pile.placeHolder = l;
+        l->setContext(&pile, this);
+        pile.setPlaceHolder(l);
         bot.setX(bot.x() + layout.cardWidth + layout.wspace);
-    }*/
+    }
 }
 
