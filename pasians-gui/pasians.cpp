@@ -38,11 +38,10 @@ void Pasians::resizeEvent(QResizeEvent* event)
 {
     Layout layout(event->size());
 
-    view->setSceneRect(scene->sceneRect());
-
-    view->centerOn(0, 0);
-
     showGames(layout);
+
+    view->setSceneRect(scene->sceneRect());
+    view->centerOn(0, 0);
 }
 
 Pasians::~Pasians()
@@ -167,7 +166,6 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
             topPos.setX(topPos.x() + layout.cardWidth + layout.wspace);
         }
-
     } else { // game initialization
 
         for (auto &card: game->pickPile.cards) {
@@ -204,7 +202,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
         game->setupPlaceHolders(layout, scene);
 
-        view->setSceneRect(scene->sceneRect());
+        view->setSceneRect(scene->sceneRect());            
         game->start();
     }
     activeLayout = layout;

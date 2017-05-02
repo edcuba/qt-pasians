@@ -24,6 +24,7 @@ void Game::setup()
     int i = 0;
     for (auto &card: cards)
     {
+        cout << (int) card.type << "-" << (int) card.color << endl;
         if (i < 28)
         {
 
