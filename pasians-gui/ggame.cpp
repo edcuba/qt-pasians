@@ -1,7 +1,7 @@
 #include "ggame.h"
+#include "playwrapper.h"
 
 #include <iostream>
-#include <QGraphicsProxyWidget>
 
 GGame::GGame(Pasians *pasians)
 {
@@ -92,8 +92,8 @@ static PlayLabel *setUpWrapper(QSize &size, QPoint &place, QGraphicsScene *scene
     hold->visible = true;
     PlayLabel *l = new PlayLabel(hold, size);
     l->setPlaceHolder();
-    QGraphicsProxyWidget *w = scene->addWidget(l);
-    l->setWrapper(w);
+    PlayWrapper *w = new PlayWrapper(l);
+    scene->addItem(w);
     l->setPos(place);
     return l;
 }

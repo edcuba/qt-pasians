@@ -18,7 +18,8 @@ SOURCES += main.cpp\
         playlabel.cpp \
         layout.cpp \
         ggame.cpp \
-        ../src/jsoncpp.cpp
+        ../src/jsoncpp.cpp \
+    playwrapper.cpp
 
 HEADERS  += pasians.h \
         ../src/paslib.h \
@@ -26,7 +27,8 @@ HEADERS  += pasians.h \
         layout.h \
         cards.h \
         ggame.h \
-        ../src/json/json.h
+        ../src/json/json.h \
+    playwrapper.h
 
 FORMS    += pasians.ui
 

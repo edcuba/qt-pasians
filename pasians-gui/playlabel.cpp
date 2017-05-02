@@ -1,7 +1,6 @@
 #include "playlabel.h"
 #include "cards.h"
 #include <QMouseEvent>
-#include <QGraphicsProxyWidget>
 #include <QPointF>
 #include <algorithm>
 #include <QSize>
@@ -194,7 +193,7 @@ void PlayLabel::moveCard(QPoint &position)
     cardWrapper->setPos(position);
 }
 
-void PlayLabel::setWrapper(QGraphicsProxyWidget *wrapper)
+void PlayLabel::setWrapper(PlayWrapper *wrapper)
 {
     cardWrapper = wrapper;
 }
@@ -252,4 +251,17 @@ void PlayLabel::setPlaceHolder()
 {
     placeHolder = true;
 }
+
+void PlayLabel::setSize(QSize &size)
+{
+    setFixedSize(size);
+    wrapper()->adjust();
+
+}
+
+PlayWrapper *PlayLabel::wrapper() const
+{
+    return cardWrapper;
+}
+
 

@@ -2,7 +2,6 @@
 #define PLAYLABEL_H
 
 #include <QLabel>
-#include <QGraphicsProxyWidget>
 #include <QMouseEvent>
 #include <QPoint>
 
@@ -10,6 +9,7 @@ class PlayLabel;
 
 #include "pasians.h"
 #include "ggame.h"
+#include "playwrapper.h"
 
 class PlayLabel : public QLabel
 {
@@ -17,7 +17,8 @@ class PlayLabel : public QLabel
 
 public:
     PlayLabel(Card *card, QSize &cardSize);
-    void setWrapper(QGraphicsProxyWidget *wrapper);
+    void setWrapper(PlayWrapper *wrapper);
+    PlayWrapper *wrapper() const;
     void setPos(QPoint &point);
     void setPile(Pile *pile);
     void changePile(Pile *pile);
@@ -27,6 +28,7 @@ public:
     void reveal();
     void hide();
     void setPlaceHolder();
+    void setSize(QSize &size);
 
 protected:
     void mousePressEvent(QMouseEvent * event);
@@ -40,7 +42,7 @@ protected:
     bool placeHolder = false;
 
 private:
-    QGraphicsProxyWidget *cardWrapper = NULL;
+    PlayWrapper *cardWrapper = NULL;
     Pile *actualPile = NULL;
     Card *gameCard = NULL;
 
