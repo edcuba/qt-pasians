@@ -206,6 +206,123 @@ int Cli::undo(vector<string> &attributes)
     return 0;
 }
 
+int Cli::move(vector<string> &attributes)
+{
+  if (attributes.size() != 3)
+  {
+    cout << "Wrong number of arguments\nusage: move [FROM] [WHERE] [NUMBER]" << endl;
+    return 1;
+  }
+  Pile *from;
+  if (attributes[0] == "B1")
+    from = &(games[0].bottomPiles[0]);
+  else if (attributes[0] == "B2")
+    from = &(games[0].bottomPiles[1]);
+  else if (attributes[0] == "B3")
+    from = &(games[0].bottomPiles[2]);
+  else if (attributes[0] == "B4")
+    from = &(games[0].bottomPiles[3]);
+  else if (attributes[0] == "B5")
+    from = &(games[0].bottomPiles[4]);
+  else if (attributes[0] == "B6")
+    from = &(games[0].bottomPiles[5]);
+  else if (attributes[0] == "B7")
+    from = &(games[0].bottomPiles[6]);
+  else if (attributes[0] == "T1")
+    from = &(games[0].topPiles[0]);
+  else if (attributes[0] == "T2")
+    from = &(games[0].topPiles[1]);
+  else if (attributes[0] == "T3")
+    from = &(games[0].topPiles[2]);
+  else if (attributes[0] == "T4")
+    from = &(games[0].topPiles[3]);
+  else if (attributes[0] == "DROP")
+    from = &(games[0].dropPile);
+  else
+  {
+    cout << "Uncorrect [FROM]" << endl;
+    return 1;
+  }
+
+  Pile *where;
+  if (attributes[1] == "B1")
+    where = &(games[0].bottomPiles[0]);
+  else if (attributes[1] == "B2")
+    where = &(games[0].bottomPiles[1]);
+  else if (attributes[1] == "B3")
+    where = &(games[0].bottomPiles[2]);
+  else if (attributes[1] == "B4")
+    where = &(games[0].bottomPiles[3]);
+  else if (attributes[1] == "B5")
+    where = &(games[0].bottomPiles[4]);
+  else if (attributes[1] == "B6")
+    where = &(games[0].bottomPiles[5]);
+  else if (attributes[1] == "B7")
+    where = &(games[0].bottomPiles[6]);
+  else if (attributes[1] == "T1")
+    where = &(games[0].topPiles[0]);
+  else if (attributes[1] == "T2")
+    where = &(games[0].topPiles[1]);
+  else if (attributes[1] == "T3")
+    where = &(games[0].topPiles[2]);
+  else if (attributes[1] == "T4")
+    where = &(games[0].topPiles[3]);
+  else
+  {
+    cout << "Uncorrect [WHERE]" << endl;
+    return 1;
+  }
+
+  int num = 100;
+  try
+  {
+    num = stoi(attributes[2]);
+  }
+  catch (...)
+  {
+    cout << "Arg 3 must be a number" << endl;
+    return 1;
+  }
+
+  int index  = from->cards.size() - num;
+
+  if (from == &(games[0].dropPile)  && num != 1)
+  {
+    cout << "Cant pick more than one card from drop pile." << endl;
+    return 0;
+  }
+
+  if ((from == &(games[0].topPiles[0]) ||
+       from == &(games[0].topPiles[1]) ||
+       from == &(games[0].topPiles[2]) ||
+       from == &(games[0].topPiles[3])
+      ) && num != 1)
+  {
+    cout << "Cant pick more than one card from top piles." << endl;
+    return 1;
+  }
+
+  if (index < 0)
+  {
+    cout << "Not enough cards." << endl;
+    return 1;
+  }
+
+  if (!from->cards[index].visible)
+  {
+    cout << "Card is not visible" << endl;
+    return 1;
+  }
+
+  games[0].move(from, where, index);
+
+  printState(games[0]);
+
+
+  return 0;
+}
+
+
 int main()
 {
     Cli cli;

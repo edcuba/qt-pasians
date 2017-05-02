@@ -79,11 +79,15 @@ int Game::move(Pile *from, Pile *where, int index)
         case 2:
             if (moving.size() != 1)
                 return 0;
-            if (!where->cards.empty() && moving[0].type == 14)
+            if ((!where->cards.empty() && moving[0].type == 14) ||
+                (where->cards.empty() && moving[0].type != 14))
                 return 0;
 
             if (!where->cards.empty())
             {
+                if (where->cards.back().color == moving[0].color &&
+                    where->cards.back().type == moving[0].type + 12)
+                    break;
                 if (where->cards.back().color != moving[0].color ||
                     where->cards.back().type != moving[0].type + 1)
                     return 0;
@@ -217,6 +221,7 @@ vector<Card> Game::getCards()
         c++;
         c %= 4;
     }
+    srand(time(0));
     random_shuffle(pile.begin(), pile.end());
     return pile;
 }

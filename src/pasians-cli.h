@@ -41,13 +41,15 @@ protected:
     static int printHelp(vector<string> &attributes);
     static int draw(vector<string> &attributes);
     static int undo(vector<string> &attributes);
+    static int move(vector<string> &attributes);
 
     const unordered_map<string, int (*)(vector<string> &)> commands {
         {"new", *Cli::newGame},
         {"exit", *Cli::exitGame},
         {"help", *Cli::printHelp},
         {"draw", *Cli::draw},
-        {"undo", *Cli::undo}
+        {"undo", *Cli::undo},
+        {"move", *Cli::move}
     };
 };
 
