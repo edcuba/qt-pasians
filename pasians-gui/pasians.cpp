@@ -22,13 +22,9 @@ Pasians::Pasians(QWidget *parent) :
     GGame *game = generateGame();
     games.push_back(game);
 
-    QSize s = size();
-
-    Layout layout(s);
-
-    showGame(game, layout);
-
     view->show();
+
+    showGames();
 
     view->setMouseTracking(true);
     this->setMouseTracking(true);
@@ -37,12 +33,8 @@ Pasians::Pasians(QWidget *parent) :
 
 void Pasians::resizeEvent(QResizeEvent* event)
 {
-    Layout layout(event->size());
-
-    showGames(layout);
-
-    view->setSceneRect(scene->sceneRect());
-    view->centerOn(0, 0);
+    Q_UNUSED(event);
+    showGames();
 }
 
 Pasians::~Pasians()
@@ -55,17 +47,18 @@ Pasians::~Pasians()
 
 void Pasians::redraw()
 {
-    showGames(activeLayout);
+    showGames();
 }
 
 /**
  * @brief Pasians::showGames show all games in global layout
  * @param layout global layout
  */
-void Pasians::showGames(Layout &layout)
+void Pasians::showGames()
 {
-
     size_t gsize = games.size();
+
+    Layout layout(size());
 
     ui->actionNew->setEnabled(gsize < 4);
     ui->menuGame_1->setEnabled(gsize > 0);
@@ -78,19 +71,60 @@ void Pasians::showGames(Layout &layout)
         showGame(games.front(), layout);
         break;
     case 2:
+    {
+        QSize s = layout.lsize;
+        s.setWidth(s.width() / 2);
 
+        Layout split0(s, QPoint());
+        showGame(games[0], split0);
 
+        Layout split1(s, QPoint(s.width(), 0));
+
+        showGame(games[1], split1);
         break;
+    }
     case 3:
+    {
+        QSize s = layout.lsize;
 
+        s.setHeight(s.height() / 2);
+        s.setWidth(s.width() / 2);
+
+        Layout split0(s, QPoint());
+        Layout split1(s, QPoint(s.width(), 0));
+        Layout split2(s, QPoint(0, s.height()));
+
+        showGame(games[0], split0);
+        showGame(games[1], split1);
+        showGame(games[2], split2);
 
         break;
+    }
     case 4:
+    {
+        QSize s = layout.lsize;
 
+        s.setHeight(s.height() / 2);
+        s.setWidth(s.width() / 2);
+
+        Layout split0(s, QPoint());
+        Layout split1(s, QPoint(s.width(), 0));
+        Layout split2(s, QPoint(0, s.height()));
+        Layout split3(s, QPoint(s.width(), s.height()));
+
+        showGame(games[0], split0);
+        showGame(games[1], split1);
+        showGame(games[2], split2);
+        showGame(games[3], split3);
+
+        break;
+    }
         break;
     default:
         return;
     }
+
+    view->setSceneRect(scene->itemsBoundingRect());
 }
 
 
@@ -235,10 +269,10 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
         game->setupPlaceHolders(layout, scene);
 
-        view->setSceneRect(scene->sceneRect());            
         game->start();
+
+        showGame(game, layout);
     }
-    activeLayout = layout;
 }
 
 void Pasians::finalizeGame(GGame *game)

@@ -43,7 +43,7 @@ private slots:
 
     void on_actionQuit_triggered();
 
-private:
+protected:
     vector<GGame*> games;
 
     QGraphicsScene *scene;
@@ -51,13 +51,10 @@ private:
 
     Ui::Pasians *ui;
 
-    void showGames(Layout &layout);
+    void showGames();
     GGame *generateGame();
     void showGame(GGame *game, Layout &layout);
     PlayLabel *drawCard(Card &card, QSize &cardSize);
-
-    Layout activeLayout;
-
 };
 
 #endif // PASIANS_H
