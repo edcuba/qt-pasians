@@ -356,3 +356,28 @@ void Pasians::on_actionQuit_triggered()
     games.erase(it);
     finalizeGame(game);
 }
+
+void Pasians::on_actionUndo_triggered()
+{
+    games[0]->undo();
+    showGames();
+}
+
+void Pasians::on_actionUndo_2_triggered()
+{
+    games[1]->undo();
+    showGames();
+}
+
+void Pasians::on_actionUndo_3_triggered()
+{
+    games[2]->undo();
+    showGames();
+}
+
+
+void Pasians::on_actionUndo_4_triggered()
+{
+    games[3]->undo();
+    showGames();
+}

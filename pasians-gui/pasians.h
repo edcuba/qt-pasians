@@ -9,7 +9,7 @@
 #include <QGraphicsView>
 #include <QPoint>
 
-const int cardOffsetMod = 5;
+const int cardOffsetMod = 6;
 
 namespace Ui {
     class Pasians;
@@ -42,6 +42,14 @@ private slots:
     void on_actionQuit_2_triggered();
 
     void on_actionQuit_triggered();
+
+    void on_actionUndo_triggered();
+
+    void on_actionUndo_2_triggered();
+
+    void on_actionUndo_3_triggered();
+
+    void on_actionUndo_4_triggered();
 
 protected:
     vector<GGame*> games;

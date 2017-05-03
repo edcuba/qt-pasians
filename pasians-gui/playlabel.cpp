@@ -80,11 +80,14 @@ void PlayLabel::mousePressEvent(QMouseEvent * event)
         if (placeHolder) {
             for (Card &card: game->pickPile.cards) {
                 PlayLabel *l = static_cast<PlayLabel *>(card.parent);
+                l->actualPile = &game->pickPile;
+                l->gameCard = &card;
                 l->hide();
             }
         } else {
             reveal();
             actualPile = &game->dropPile;
+            gameCard = &game->dropPile.cards.back();
         }
         drawing = true;
         game->redraw();
@@ -121,7 +124,7 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
-    if (gameCard->type == 0) {
+    if (placeHolder) {
         return;
     }
 
@@ -156,7 +159,7 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 
 void PlayLabel::mouseMoveEvent(QMouseEvent *event)
 {
-    if (gameCard->type == 0) {
+    if (placeHolder) {
         return;
     }
 
@@ -238,8 +241,6 @@ void PlayLabel::changePile(Pile *pile)
         l->actualPile = pile;
         l->gameCard = &card;
     }
-
-
 }
 
 string PlayLabel::hash()

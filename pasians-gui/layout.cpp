@@ -26,12 +26,12 @@ void Layout::setupLayout(const QSize &size, const QPoint &offset)
     int w = width / 100;
 
     if (w * 14.52 * 5 > height) {
-        w = 1.5 * height / 100;
+        w = 1.42 * height / 100;
     }
 
     lsize = size;
 
-    cardWidth = 12 * w;
+    cardWidth = 11 * w;
 
     wspace = 2 * w;
 
@@ -44,7 +44,7 @@ void Layout::setupLayout(const QSize &size, const QPoint &offset)
     drop.setY(pick.y());
 
     bot.setX(pick.x());
-    bot.setY(-cardHeight + oy);
+    bot.setY(pick.y() + 1.1 * cardHeight);
 
     top.setX(drop.x() + 2 * (cardWidth + wspace));
     top.setY(pick.y());
