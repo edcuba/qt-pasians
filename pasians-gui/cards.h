@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-// 2-10, J (11), Q (12), K (13), A (14)
+// 2-10, J (11), Q (12), K (13), A (1)
 // 0-3, hearts, clubs, diamonds, spades
 const std::unordered_map<std::string, std::string> cardImg {
     {"2-0",   ":/res/2_of_hearts.png"},
@@ -18,7 +18,7 @@ const std::unordered_map<std::string, std::string> cardImg {
     {"11-1",  ":/res/jack_of_clubs.png"},
     {"12-2",  ":/res/queen_of_diamonds.png"},
     {"13-3",  ":/res/king_of_spades.png"},
-    {"14-0",  ":/res/ace_of_hearts.png"},
+    {"1-0",  ":/res/ace_of_hearts.png"},
     {"2-1",   ":/res/2_of_clubs.png"},
     {"3-2",   ":/res/3_of_diamonds.png"},
     {"4-3",   ":/res/4_of_spades.png"},
@@ -31,7 +31,7 @@ const std::unordered_map<std::string, std::string> cardImg {
     {"11-2",  ":/res/jack_of_diamonds.png"},
     {"12-3",  ":/res/queen_of_spades.png"},
     {"13-0",  ":/res/king_of_hearts.png"},
-    {"14-1",  ":/res/ace_of_clubs.png"},
+    {"1-1",  ":/res/ace_of_clubs.png"},
     {"2-2",   ":/res/2_of_diamonds.png"},
     {"3-3",   ":/res/3_of_spades.png"},
     {"4-0",   ":/res/4_of_hearts.png"},
@@ -44,7 +44,7 @@ const std::unordered_map<std::string, std::string> cardImg {
     {"11-3",  ":/res/jack_of_spades.png"},
     {"12-0",  ":/res/queen_of_hearts.png"},
     {"13-1",  ":/res/king_of_clubs.png"},
-    {"14-2",  ":/res/ace_of_diamonds.png"},
+    {"1-2",  ":/res/ace_of_diamonds.png"},
     {"2-3",   ":/res/2_of_spades.png"},
     {"3-0",   ":/res/3_of_hearts.png"},
     {"4-1",   ":/res/4_of_clubs.png"},
@@ -57,7 +57,7 @@ const std::unordered_map<std::string, std::string> cardImg {
     {"11-0",  ":/res/jack_of_hearts.png"},
     {"12-1",  ":/res/queen_of_clubs.png"},
     {"13-2",  ":/res/king_of_diamonds.png"},
-    {"14-3",  ":/res/ace_of_spades.png"},
+    {"1-3",  ":/res/ace_of_spades.png"},
     {"0-0", ":/res/placeholder.png"},
     {"none", ":/res/none.png"}
 };

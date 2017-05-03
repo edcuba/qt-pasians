@@ -78,20 +78,24 @@ int Game::move(Pile *from, Pile *where, int index)
     save.number = moving.size();
     switch (where->type) {
         case 2:
+            cout << "case 2" << endl;
             if (moving.size() != 1)
                 return 0;
-            if ((!where->cards.empty() && moving[0].type == 14) ||
-                (where->cards.empty() && moving[0].type != 14))
+            if (/*(!where->cards.empty() && moving[0].type == 1) ||*/
+                (where->cards.empty() && moving[0].type != 1))
+            {
+                cout << "case A" << endl;
                 return 0;
+            }
 
             if (!where->cards.empty())
             {
-                if (where->cards.back().color == moving[0].color &&
-                    where->cards.back().type == moving[0].type + 12)
-                    break;
                 if (where->cards.back().color != moving[0].color ||
-                    where->cards.back().type != moving[0].type + 1)
+                    where->cards.back().type - moving[0].type != -1)
+                {
+                    cout << "case B" << endl;
                     return 0;
+                }
             }
             break;
 
@@ -107,7 +111,7 @@ int Game::move(Pile *from, Pile *where, int index)
             {
                 if ((where->cards.back().color + moving[0].color) % 2 == 0 ||
                     where->cards.back().type != moving[0].type + 1) {
-
+                    cout << "Karta " << (int)moving[0].type << endl;
                     cout << (int) where->cards.back().color << " " << (int)moving[0].color << endl;
                     cout << "case B" << endl;
                     return 0;
@@ -217,7 +221,7 @@ vector<Card> Game::getCards()
     vector<Card> pile;
     char c = 0;
     for (char t = 0; t < 52; ++t) {
-        Card card(t % 13 + 2, c);
+        Card card(t % 13 + 1, c);
         pile.push_back(card);
         c++;
         c %= 4;

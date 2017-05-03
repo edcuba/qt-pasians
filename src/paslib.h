@@ -19,7 +19,7 @@ using namespace std;
 
 class Card {
 public:
-    char type {0};   // 2-10, J (11), Q (12), K (13), A (14)
+    char type {0};   // 2-10, J (11), Q (12), K (13), A (1)
     char color {4};  // 0-3, hearts, clubs, diamonds, spades
     bool visible {false};
     Card(char _type, char _color);

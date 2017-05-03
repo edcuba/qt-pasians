@@ -76,7 +76,7 @@ void Cli::printState(Game &game)
     cout << "PICK" << endl;
     printPile(game.pickPile);
 
-    cout << "DROP" << endl;
+    cout << "drop" << endl;
     printPile(game.dropPile);
 
     int counter = 1;
@@ -213,30 +213,32 @@ int Cli::move(vector<string> &attributes)
     cout << "Wrong number of arguments\nusage: move [FROM] [WHERE] [NUMBER]" << endl;
     return 1;
   }
+  transform(attributes[0].begin(), attributes[0].end(), attributes[0].begin(), ::tolower);
+  transform(attributes[1].begin(), attributes[1].end(), attributes[1].begin(), ::tolower);
   Pile *from;
-  if (attributes[0] == "B1")
+  if (attributes[0] == "b1")
     from = &(games[0].bottomPiles[0]);
-  else if (attributes[0] == "B2")
+  else if (attributes[0] == "b2")
     from = &(games[0].bottomPiles[1]);
-  else if (attributes[0] == "B3")
+  else if (attributes[0] == "b3")
     from = &(games[0].bottomPiles[2]);
-  else if (attributes[0] == "B4")
+  else if (attributes[0] == "b4")
     from = &(games[0].bottomPiles[3]);
-  else if (attributes[0] == "B5")
+  else if (attributes[0] == "b5")
     from = &(games[0].bottomPiles[4]);
-  else if (attributes[0] == "B6")
+  else if (attributes[0] == "b6")
     from = &(games[0].bottomPiles[5]);
-  else if (attributes[0] == "B7")
+  else if (attributes[0] == "b7")
     from = &(games[0].bottomPiles[6]);
-  else if (attributes[0] == "T1")
+  else if (attributes[0] == "t1")
     from = &(games[0].topPiles[0]);
-  else if (attributes[0] == "T2")
+  else if (attributes[0] == "t2")
     from = &(games[0].topPiles[1]);
-  else if (attributes[0] == "T3")
+  else if (attributes[0] == "t3")
     from = &(games[0].topPiles[2]);
-  else if (attributes[0] == "T4")
+  else if (attributes[0] == "t4")
     from = &(games[0].topPiles[3]);
-  else if (attributes[0] == "DROP")
+  else if (attributes[0] == "drop")
     from = &(games[0].dropPile);
   else
   {
@@ -245,27 +247,27 @@ int Cli::move(vector<string> &attributes)
   }
 
   Pile *where;
-  if (attributes[1] == "B1")
+  if (attributes[1] == "b1")
     where = &(games[0].bottomPiles[0]);
-  else if (attributes[1] == "B2")
+  else if (attributes[1] == "b2")
     where = &(games[0].bottomPiles[1]);
-  else if (attributes[1] == "B3")
+  else if (attributes[1] == "b3")
     where = &(games[0].bottomPiles[2]);
-  else if (attributes[1] == "B4")
+  else if (attributes[1] == "b4")
     where = &(games[0].bottomPiles[3]);
-  else if (attributes[1] == "B5")
+  else if (attributes[1] == "b5")
     where = &(games[0].bottomPiles[4]);
-  else if (attributes[1] == "B6")
+  else if (attributes[1] == "b6")
     where = &(games[0].bottomPiles[5]);
-  else if (attributes[1] == "B7")
+  else if (attributes[1] == "b7")
     where = &(games[0].bottomPiles[6]);
-  else if (attributes[1] == "T1")
+  else if (attributes[1] == "t1")
     where = &(games[0].topPiles[0]);
-  else if (attributes[1] == "T2")
+  else if (attributes[1] == "t2")
     where = &(games[0].topPiles[1]);
-  else if (attributes[1] == "T3")
+  else if (attributes[1] == "t3")
     where = &(games[0].topPiles[2]);
-  else if (attributes[1] == "T4")
+  else if (attributes[1] == "t4")
     where = &(games[0].topPiles[3]);
   else
   {
