@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <vector>
 #include <iostream>
+#include <QMessageBox>
 #include "playwrapper.h"
 
 Pasians::Pasians(QWidget *parent) :
@@ -45,8 +46,22 @@ Pasians::~Pasians()
     }
 }
 
+static void showFinish()
+{
+    QMessageBox msgBox;
+    msgBox.setText("You won!");
+    msgBox.exec();
+}
+
 void Pasians::redraw()
 {
+    for (vector<GGame *>::iterator it = games.begin(); it != games.end(); ++it) {
+        GGame *game = *it;
+        if (game->done()) {
+            showFinish();
+            games.erase(it);
+        }
+    }
     showGames();
 }
 
@@ -56,6 +71,10 @@ void Pasians::redraw()
  */
 void Pasians::showGames()
 {
+    if (games.empty()) {
+        games.push_back(generateGame());
+    }
+
     size_t gsize = games.size();
 
     Layout layout(size());

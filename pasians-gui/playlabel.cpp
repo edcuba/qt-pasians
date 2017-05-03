@@ -228,7 +228,9 @@ void PlayLabel::changePile(Pile *pile)
 
     switch (game->move(actualPile, pile, index)) {
     case 1:
+        break;
     case 2:
+        game->finish();
         break;
     default:
         return;

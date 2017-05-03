@@ -128,3 +128,14 @@ void GGame::setupPlaceHolders(Layout &layout, QGraphicsScene *scene)
     }
 }
 
+void GGame::finish()
+{
+    isDone = true;
+}
+
+bool GGame::done() const
+{
+    return isDone;
+}
+
+

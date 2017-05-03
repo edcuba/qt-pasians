@@ -22,8 +22,11 @@ public:
     Pile *pileAt(const QPointF &point, Pile *ignore);
     QRectF getPileBoundaries(Pile &pile);
     void setupPlaceHolders(Layout &layout, QGraphicsScene *scene);
+    void finish();
+    bool done() const;
 private:
     bool isInitialized = false;
+    bool isDone = false;
     Pasians *gameWindow = NULL;
 };
 
