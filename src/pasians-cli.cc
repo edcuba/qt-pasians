@@ -44,11 +44,11 @@ int Cli::newGame(vector<string> &attributes)
 * Print card
 * @param card particular game card
 **/
-void Cli::printCard(Card &card)
+void Cli::printCard(Card *card)
 {
     string c;
-    if (card.visible) {
-        c = to_string((int)card.type) + "-" + to_string((int) card.color);
+    if (card->visible) {
+        c = to_string((int)card->type) + "-" + to_string((int) card->color);
     } else {
         c = "none";
     }
@@ -310,7 +310,7 @@ int Cli::move(vector<string> &attributes)
     return 1;
   }
 
-  if (!from->cards[index].visible)
+  if (!from->cards[index]->visible)
   {
     cout << "Card is not visible" << endl;
     return 1;

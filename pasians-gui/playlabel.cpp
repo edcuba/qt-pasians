@@ -58,7 +58,7 @@ void PlayLabel::hide()
     }
 }
 
-void PlayLabel::mousePressEvent(QMouseEvent * event)
+void PlayLabel::mousePressEvent(QMouseEvent *event)
 {
     childs.clear();
     drawing = false;
@@ -78,16 +78,14 @@ void PlayLabel::mousePressEvent(QMouseEvent * event)
     if (pile->type == 0) {
         game->draw();
         if (placeHolder) {
-            for (Card &card: game->pickPile.cards) {
-                PlayLabel *l = static_cast<PlayLabel *>(card.parent);
+            for (Card *card: game->pickPile.cards) {
+                PlayLabel *l = static_cast<PlayLabel *>(card->parent);
                 l->actualPile = &game->pickPile;
-                l->gameCard = &card;
                 l->hide();
             }
         } else {
             reveal();
             actualPile = &game->dropPile;
-            gameCard = &game->dropPile.cards.back();
         }
         drawing = true;
         game->redraw();
@@ -99,16 +97,16 @@ void PlayLabel::mousePressEvent(QMouseEvent * event)
     }
 
     unsigned index = 0;
-    vector<Card>& thisPile = actualPile->cards;
-    for (Card &card: thisPile) {
-        if (card.parent == this) {
+    vector<Card *>& thisPile = actualPile->cards;
+    for (Card *card: thisPile) {
+        if (card->parent == this) {
             break;
         }
         index++;
     }
 
     for (unsigned i = index; i < thisPile.size(); ++i) {
-        childs.push_back(&thisPile[i]);
+        childs.push_back(thisPile[i]);
     }
 
     mouseMoveEvent(event);
@@ -150,8 +148,6 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
     } else if (DEBUGMODE) {
         cout << "No pile" << endl;
     }
-
-
 
     game->redraw();
 
@@ -215,12 +211,12 @@ void PlayLabel::setPile(Pile *pile)
 
 void PlayLabel::changePile(Pile *pile)
 {
-    vector<Card>& thisPile = actualPile->cards;
+    vector<Card *>& thisPile = actualPile->cards;
 
     unsigned index = 0;
 
-    for (Card &card: thisPile) {
-        if ((PlayLabel *)card.parent == this) {
+    for (Card *card: thisPile) {
+        if ((PlayLabel *)card->parent == this) {
             break;
         }
         index++;
@@ -238,10 +234,9 @@ void PlayLabel::changePile(Pile *pile)
 
     actualPile = pile;
 
-    for (auto &card: actualPile->cards) {
-        PlayLabel *l = static_cast<PlayLabel *>(card.parent);
+    for (Card *card: actualPile->cards) {
+        PlayLabel *l = static_cast<PlayLabel *>(card->parent);
         l->actualPile = pile;
-        l->gameCard = &card;
     }
 }
 

@@ -14,8 +14,8 @@ void GGame::redraw()
         if (pile.cards.empty()) {
             continue;
         }
-        Card  &c = pile.cards.back();
-        PlayLabel *l = static_cast<PlayLabel *>(c.parent);
+        Card *c = pile.cards.back();
+        PlayLabel *l = static_cast<PlayLabel *>(c->parent);
         l->reveal();
     }
     gameWindow->redraw();
@@ -35,14 +35,14 @@ QRectF GGame::getPileBoundaries(Pile &pile)
 {
     QRectF area(0, 0, 0, 0);
     if (!pile.cards.empty()) {
-        Card &first = pile.cards.front();
-        PlayLabel *l = static_cast<PlayLabel *>(first.parent);
+        Card *first = pile.cards.front();
+        PlayLabel *l = static_cast<PlayLabel *>(first->parent);
         QRectF geo = l->geometry();
         area.setTop(geo.top());
         area.setLeft(geo.left());
 
-        Card &last = pile.cards.back();
-        l = static_cast<PlayLabel *>(last.parent);
+        Card *last = pile.cards.back();
+        l = static_cast<PlayLabel *>(last->parent);
         geo = l->geometry();
         area.setBottom(geo.bottom());
         area.setRight(geo.right());
@@ -136,6 +136,51 @@ void GGame::finish()
 bool GGame::done() const
 {
     return isDone;
+}
+
+void GGame::performUndo()
+{
+    undo();
+
+    for (Card *card: pickPile.cards) {
+        PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+        if (card->visible) {
+            w->reveal();
+        } else {
+            w->hide();
+        }
+    }
+
+    for (Card *card: pickPile.cards) {
+        PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+        if (card->visible) {
+            w->reveal();
+        } else {
+            w->hide();
+        }
+    }
+
+    for (auto &pile: topPiles) {
+        for (Card *card: pile.cards) {
+            PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+            if (card->visible) {
+                w->reveal();
+            } else {
+                w->hide();
+            }
+        }
+    }
+
+    for (auto &pile: bottomPiles) {
+        for (Card *card: pile.cards) {
+            PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+            if (card->visible) {
+                w->reveal();
+            } else {
+                w->hide();
+            }
+        }
+    }
 }
 
 

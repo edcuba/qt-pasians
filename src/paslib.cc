@@ -20,11 +20,11 @@ Card::Card(char _type, char _color)
 
 void Game::setup()
 {
-    vector<Card> cards = getCards();
+    vector<Card *> cards = getCards();
     int i = 0;
     for (auto &card: cards)
     {
-        cout << (int) card.type << "-" << (int) card.color << endl;
+        cout << (int) card->type << "-" << (int) card->color << endl;
         if (i < 28)
         {
 
@@ -74,7 +74,7 @@ int Game::move(Pile *from, Pile *where, int index)
 {
     cout << "in" << endl;
     Move save(from, where);
-    vector<Card> moving(from->cards.begin() + index, from->cards.end());
+    vector<Card *> moving(from->cards.begin() + index, from->cards.end());
     save.number = moving.size();
     switch (where->type) {
         case 2:
@@ -82,7 +82,7 @@ int Game::move(Pile *from, Pile *where, int index)
             if (moving.size() != 1)
                 return 0;
             if (/*(!where->cards.empty() && moving[0].type == 1) ||*/
-                (where->cards.empty() && moving[0].type != 1))
+                (where->cards.empty() && moving[0]->type != 1))
             {
                 cout << "case A" << endl;
                 return 0;
@@ -90,8 +90,8 @@ int Game::move(Pile *from, Pile *where, int index)
 
             if (!where->cards.empty())
             {
-                if (where->cards.back().color != moving[0].color ||
-                    where->cards.back().type - moving[0].type != -1)
+                if (where->cards.back()->color != moving[0]->color ||
+                    where->cards.back()->type - moving[0]->type != -1)
                 {
                     cout << "case B" << endl;
                     return 0;
@@ -102,17 +102,17 @@ int Game::move(Pile *from, Pile *where, int index)
         case 3:
         cout << "case 3" << endl;
 
-            if ((!where->cards.empty() && moving[0].type == 13)) {
+            if ((!where->cards.empty() && moving[0]->type == 13)) {
                 cout << "case A" << endl;
                 return 0;
             }
 
             if (!where->cards.empty())
             {
-                if ((where->cards.back().color + moving[0].color) % 2 == 0 ||
-                    where->cards.back().type != moving[0].type + 1) {
-                    cout << "Karta " << (int)moving[0].type << endl;
-                    cout << (int) where->cards.back().color << " " << (int)moving[0].color << endl;
+                if ((where->cards.back()->color + moving[0]->color) % 2 == 0 ||
+                    where->cards.back()->type != moving[0]->type + 1) {
+                    cout << "Karta " << (int)moving[0]->type << endl;
+                    cout << (int) where->cards.back()->color << " " << (int)moving[0]->color << endl;
                     cout << "case B" << endl;
                     return 0;
                 }
@@ -124,18 +124,18 @@ int Game::move(Pile *from, Pile *where, int index)
     }
     from->cards.erase(from->cards.begin() + index, from->cards.end());
     where->add(moving);
-    if (from->cards.size() && !from->cards.back().visible)
+    if (from->cards.size() && !from->cards.back()->visible)
     {
-        from->cards.back().visible = true;
+        from->cards.back()->visible = true;
         save.turned = true;
     }
 
-    for (auto &pile: bottomPiles)
+    /*for (auto &pile: bottomPiles)
     {
-        if (pile.cards.size())
+        if (!pile.cards.empty())
             break;
         return 2;
-    }
+    }*/
 
     moves.push_back(save);
 
@@ -144,10 +144,10 @@ int Game::move(Pile *from, Pile *where, int index)
 
 void Game::draw()
 {
-    if (pickPile.cards.size())
+    if (!pickPile.cards.empty())
     {
-        Card tmp = pickPile.cards.back();
-        tmp.visible = true;
+        Card *tmp = pickPile.cards.back();
+        tmp->visible = true;
         dropPile.cards.push_back(tmp);
         pickPile.cards.pop_back();
 
@@ -156,18 +156,18 @@ void Game::draw()
     }
     else
     {
-        if (!dropPile.cards.size())
+        if (dropPile.cards.empty())
             return;
 
 
         for (auto card = dropPile.cards.rbegin();
              card != dropPile.cards.rend(); ++card)
         {
-            card->visible = false;
-            pickPile.cards.push_back(*card);
+            Card *c = *card;
+            c->visible = false;
+            pickPile.cards.push_back(c);
         }
-        dropPile.cards.erase(dropPile.cards.begin(),
-                                   dropPile.cards.end());
+        dropPile.cards.erase(dropPile.cards.begin(), dropPile.cards.end());
 
        Move save(&(dropPile), &(pickPile));
        moves.push_back(save);
@@ -176,15 +176,15 @@ void Game::draw()
 
 void Game::undo()
 {
-    if (!moves.size())
+    if (moves.empty())
         return;
 
     Move last = moves.back();
 
     if (last.from  == &(pickPile))
     {
-        Card card = dropPile.cards.back();
-        card.visible = false;
+        Card *card = dropPile.cards.back();
+        card->visible = false;
         pickPile.add(card);
         dropPile.cards.pop_back();
     } else if (last.from  == &(dropPile) &&
@@ -193,8 +193,9 @@ void Game::undo()
         for (auto card = pickPile.cards.rbegin();
              card != pickPile.cards.rend(); ++card)
         {
-            card->visible = true;
-            dropPile.cards.push_back(*card);
+            Card *c = *card;
+            c->visible = true;
+            dropPile.cards.push_back(c);
         }
 
         pickPile.cards.erase(pickPile.cards.begin(),
@@ -208,20 +209,18 @@ void Game::undo()
     if (last.turned)
         last.from->cards.back().visible = false;
         */
-
-
 }
 
 /**
 * Generate vector of 52 play cards
 * @return #vector of play cards, order is constant
 **/
-vector<Card> Game::getCards()
+vector<Card *> Game::getCards()
 {
-    vector<Card> pile;
+    vector<Card *> pile;
     char c = 0;
     for (char t = 0; t < 52; ++t) {
-        Card card(t % 13 + 1, c);
+        Card *card = new Card(t % 13 + 1, c);
         pile.push_back(card);
         c++;
         c %= 4;
@@ -232,12 +231,12 @@ vector<Card> Game::getCards()
 }
 
 
-void Heap::add(vector<Card> &_cards)
+void Heap::add(vector<Card *> &_cards)
 {
     cards.insert(cards.end(), _cards.begin(), _cards.end());
 }
 
-void Heap::add(Card &card)
+void Heap::add(Card *card)
 {
     cards.push_back(card);
 }
@@ -245,7 +244,7 @@ void Heap::add(Card &card)
 void Heap::showTop()
 {
     if (!cards.empty()) {
-        cards.back().visible = true;
+        cards.back()->visible = true;
     }
 }
 

@@ -154,9 +154,9 @@ void Pasians::showGames()
  * @param card game card
  * @returns card label reference
  */
-PlayLabel *Pasians::drawCard(Card &card, QSize &cardSize)
+PlayLabel *Pasians::drawCard(Card *card, QSize &cardSize)
 {
-    PlayLabel *lbl = new PlayLabel(&card, cardSize);
+    PlayLabel *lbl = new PlayLabel(card, cardSize);
 
     PlayWrapper *item = new PlayWrapper(lbl);
 
@@ -188,9 +188,9 @@ void Pasians::showGame(GGame *game, Layout &layout)
     if (game->initialized()) { // allready initialized
 
         int z = 0;
-        for (auto &card: game->pickPile.cards) {
+        for (auto card: game->pickPile.cards) {
             z++;
-            w = static_cast<PlayLabel *>(card.parent);
+            w = static_cast<PlayLabel *>(card->parent);
             w->setSize(cardSize);
             w->setPos(layout.pick);
             w->setZ(z);
@@ -201,9 +201,9 @@ void Pasians::showGame(GGame *game, Layout &layout)
         w->setSize(cardSize);
 
         z = 0;
-        for (auto &card: game->dropPile.cards) {
+        for (auto card: game->dropPile.cards) {
             z++;
-            w = static_cast<PlayLabel *>(card.parent);
+            w = static_cast<PlayLabel *>(card->parent);
             w->setSize(cardSize);
             w->setPos(layout.drop);
             w->setZ(z);
@@ -221,9 +221,9 @@ void Pasians::showGame(GGame *game, Layout &layout)
             w->setPos(botPos);
             w->setSize(cardSize);
 
-            for (auto &card: pile.cards) {
+            for (auto card: pile.cards) {
                 z++;
-                w = static_cast<PlayLabel *>(card.parent);
+                w = static_cast<PlayLabel *>(card->parent);
                 w->setSize(cardSize);
                 w->setPos(botPos);
                 w->setZ(z);
@@ -242,9 +242,9 @@ void Pasians::showGame(GGame *game, Layout &layout)
             w->setPos(topPos);
             w->setSize(cardSize);
 
-            for (auto &card: pile.cards) {
+            for (auto card: pile.cards) {
                 z++;
-                w = static_cast<PlayLabel *>(card.parent);
+                w = static_cast<PlayLabel *>(card->parent);
                 w->setSize(cardSize);
                 w->setPos(topPos);
                 w->setZ(z);
@@ -254,13 +254,13 @@ void Pasians::showGame(GGame *game, Layout &layout)
         }
     } else { // game initialization
 
-        for (auto &card: game->pickPile.cards) {
+        for (auto card: game->pickPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.pick);
             w->setContext(&game->pickPile, game);
         }
 
-        for (auto &card: game->dropPile.cards) {
+        for (auto card: game->dropPile.cards) {
             w = drawCard(card, cardSize);
             w->setPos(layout.drop);
             w->setContext(&game->dropPile, game);
@@ -268,7 +268,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
         QPoint botPos = layout.bot;
         for (auto &pile: game->bottomPiles) {
-            for (auto &card: pile.cards) {
+            for (auto card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
                 w->setContext(&pile, game);
@@ -278,7 +278,7 @@ void Pasians::showGame(GGame *game, Layout &layout)
 
         QPoint topPos = layout.top;
         for (auto &pile: game->topPiles) {
-            for (auto &card: pile.cards) {
+            for (auto card: pile.cards) {
                 w = drawCard(card, cardSize);
                 w->setPos(botPos);
                 w->setContext(&pile, game);
@@ -303,23 +303,23 @@ void Pasians::finalizeGame(GGame *game)
 
     PlayLabel *l = static_cast<PlayLabel *>(game->pickPile.placeHolder());
     scene->removeItem(l->wrapper());
-    for (auto &card: game->pickPile.cards) {
-        l = static_cast<PlayLabel *>(card.parent);
+    for (auto card: game->pickPile.cards) {
+        l = static_cast<PlayLabel *>(card->parent);
         scene->removeItem(l->wrapper());
     }
 
     l = static_cast<PlayLabel *>(game->dropPile.placeHolder());
     scene->removeItem(l->wrapper());
-    for (auto &card: game->dropPile.cards) {
-        l = static_cast<PlayLabel *>(card.parent);
+    for (auto card: game->dropPile.cards) {
+        l = static_cast<PlayLabel *>(card->parent);
         scene->removeItem(l->wrapper());
     }
 
     for (auto &pile: game->topPiles) {
         l = static_cast<PlayLabel *>(pile.placeHolder());
         scene->removeItem(l->wrapper());
-        for (auto &card: pile.cards) {
-            l = static_cast<PlayLabel *>(card.parent);
+        for (auto card: pile.cards) {
+            l = static_cast<PlayLabel *>(card->parent);
             scene->removeItem(l->wrapper());
         }
     }
@@ -327,8 +327,8 @@ void Pasians::finalizeGame(GGame *game)
     for (auto &pile: game->bottomPiles) {
         l = static_cast<PlayLabel *>(pile.placeHolder());
         scene->removeItem(l->wrapper());
-        for (auto &card: pile.cards) {
-            l = static_cast<PlayLabel *>(card.parent);
+        for (auto card: pile.cards) {
+            l = static_cast<PlayLabel *>(card->parent);
             scene->removeItem(l->wrapper());
         }
     }
@@ -378,25 +378,29 @@ void Pasians::on_actionQuit_triggered()
 
 void Pasians::on_actionUndo_triggered()
 {
-    games[0]->undo();
+    GGame *game = games[0];
+    game->performUndo();
     showGames();
 }
 
 void Pasians::on_actionUndo_2_triggered()
 {
-    games[1]->undo();
+    GGame *game = games[1];
+    game->performUndo();
     showGames();
 }
 
 void Pasians::on_actionUndo_3_triggered()
 {
-    games[2]->undo();
+    GGame *game = games[2];
+    game->performUndo();
     showGames();
 }
 
 
 void Pasians::on_actionUndo_4_triggered()
 {
-    games[3]->undo();
+    GGame *game = games[3];
+    game->performUndo();
     showGames();
 }

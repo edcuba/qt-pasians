@@ -62,7 +62,7 @@ protected:
     void showGames();
     GGame *generateGame();
     void showGame(GGame *game, Layout &layout);
-    PlayLabel *drawCard(Card &card, QSize &cardSize);
+    PlayLabel *drawCard(Card *card, QSize &cardSize);
 };
 
 #endif // PASIANS_H

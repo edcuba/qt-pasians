@@ -24,6 +24,7 @@ public:
     void setupPlaceHolders(Layout &layout, QGraphicsScene *scene);
     void finish();
     bool done() const;
+    void performUndo();
 private:
     bool isInitialized = false;
     bool isDone = false;

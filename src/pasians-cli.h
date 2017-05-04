@@ -31,7 +31,7 @@ public:
 protected:
     static Command parse();
 
-    static void printCard(Card &card);
+    static void printCard(Card *card);
     static void printPile(Pile &pile);
     static void printState(Game &game);
 
