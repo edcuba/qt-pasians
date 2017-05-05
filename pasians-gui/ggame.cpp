@@ -151,7 +151,7 @@ void GGame::performUndo()
         }
     }
 
-    for (Card *card: pickPile.cards) {
+    for (Card *card: dropPile.cards) {
         PlayLabel *w = static_cast<PlayLabel *>(card->parent);
         if (card->visible) {
             w->reveal();
