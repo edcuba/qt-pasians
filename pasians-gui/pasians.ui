@@ -78,10 +78,10 @@
     <property name="title">
      <string>Game 1</string>
     </property>
+    <addaction name="actionHint"/>
     <addaction name="actionSave"/>
     <addaction name="actionLoad"/>
     <addaction name="actionUndo"/>
-    <addaction name="actionHint"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -89,10 +89,10 @@
     <property name="title">
      <string>Game 2</string>
     </property>
+    <addaction name="actionHint_2"/>
     <addaction name="actionSave_2"/>
     <addaction name="actionLoad_2"/>
     <addaction name="actionUndo_2"/>
-    <addaction name="actionHint_2"/>
     <addaction name="separator"/>
     <addaction name="actionQuit_2"/>
    </widget>
@@ -100,10 +100,10 @@
     <property name="title">
      <string>Game 3</string>
     </property>
+    <addaction name="actionHint_3"/>
     <addaction name="actionSave_3"/>
     <addaction name="actionLoad_3"/>
     <addaction name="actionUndo_3"/>
-    <addaction name="actionHint_3"/>
     <addaction name="separator"/>
     <addaction name="actionQuit_3"/>
    </widget>
@@ -111,10 +111,10 @@
     <property name="title">
      <string>Game 4</string>
     </property>
+    <addaction name="actionHint_4"/>
     <addaction name="actionSave_4"/>
     <addaction name="actionLoad_4"/>
     <addaction name="actionUndo_4"/>
-    <addaction name="actionHint_4"/>
     <addaction name="separator"/>
     <addaction name="actionQuit_4"/>
    </widget>

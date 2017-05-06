@@ -55,11 +55,9 @@ static void showFinish()
 
 void Pasians::redraw()
 {
-    for (vector<GGame *>::iterator it = games.begin(); it != games.end(); ++it) {
-        GGame *game = *it;
+    for (GGame *game: games) {
         if (game->done()) {
             showFinish();
-            games.erase(it);
         }
     }
     showGames();
@@ -380,21 +378,21 @@ void Pasians::on_actionUndo_triggered()
 {
     GGame *game = games[0];
     game->performUndo();
-    showGames();
+    redraw();
 }
 
 void Pasians::on_actionUndo_2_triggered()
 {
     GGame *game = games[1];
     game->performUndo();
-    showGames();
+    redraw();
 }
 
 void Pasians::on_actionUndo_3_triggered()
 {
     GGame *game = games[2];
     game->performUndo();
-    showGames();
+    redraw();
 }
 
 
@@ -402,5 +400,33 @@ void Pasians::on_actionUndo_4_triggered()
 {
     GGame *game = games[3];
     game->performUndo();
-    showGames();
+    redraw();
+}
+
+void Pasians::on_actionHint_triggered()
+{
+    GGame *game = games[0];
+    game->performHint();
+    redraw();
+}
+
+void Pasians::on_actionHint_2_triggered()
+{
+    GGame *game = games[1];
+    game->performHint();
+    redraw();
+}
+
+void Pasians::on_actionHint_3_triggered()
+{
+    GGame *game = games[2];
+    game->performHint();
+    redraw();
+}
+
+void Pasians::on_actionHint_4_triggered()
+{
+    GGame *game = games[3];
+    game->performHint();
+    redraw();
 }
