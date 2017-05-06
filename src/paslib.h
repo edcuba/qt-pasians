@@ -14,6 +14,10 @@
 #include "json/json.h"
 
 #include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <iterator>
+
 
 using namespace std;
 
@@ -23,6 +27,7 @@ public:
     char color {4};  // 0-3, hearts, clubs, diamonds, spades
     bool visible {false};
     Card(char _type, char _color);
+    Card(string str);
     void *parent;
 };
 
@@ -54,13 +59,15 @@ public:
     int number = 0;
     bool turned = false;
     Move(Pile *_from, Pile *_where);
+
 };
 
 class Game {
 public:
     void setup();
     void reset();
-    void load();
+    Game load(string);
+    void save(string);
 
     int move(Pile *from, Pile *where, int index);
     void draw();

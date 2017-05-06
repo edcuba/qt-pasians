@@ -397,7 +397,17 @@ int Cli::show(vector<string> &attributes)
     }
     return 0;
 }
-
+int Cli::save(vector<string> &attributes)
+{
+    games[actual_game].save(attributes[0]);
+    return 0;
+}
+int Cli::load(vector<string> &attributes)
+{
+    games[actual_game] = games[actual_game].load(attributes[0]);
+    printState(games[actual_game]);
+    return 0;
+}
 int main()
 {
     Cli cli;
