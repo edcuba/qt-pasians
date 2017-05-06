@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QGraphicsView>
 #include <QPoint>
+#include <QString>
 
 const int cardOffsetMod = 6;
 
@@ -59,11 +60,30 @@ private slots:
 
     void on_actionHint_4_triggered();
 
+    void on_actionSave_triggered();
+
+    void on_actionLoad_triggered();
+
+    void on_actionSave_2_triggered();
+
+    void on_actionLoad_2_triggered();
+
+    void on_actionSave_3_triggered();
+
+    void on_actionLoad_3_triggered();
+
+    void on_actionSave_4_triggered();
+
+    void on_actionLoad_4_triggered();
+
 protected:
     vector<GGame*> games;
 
     QGraphicsScene *scene;
     QGraphicsView *view;
+
+    QString loadFile();
+    QString saveFile();
 
     Ui::Pasians *ui;
 

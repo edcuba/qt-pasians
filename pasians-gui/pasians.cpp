@@ -7,6 +7,7 @@
 #include <iostream>
 #include <QMessageBox>
 #include "playwrapper.h"
+#include <QFileDialog>
 
 Pasians::Pasians(QWidget *parent) :
     QMainWindow(parent),
@@ -429,4 +430,62 @@ void Pasians::on_actionHint_4_triggered()
     GGame *game = games[3];
     game->performHint();
     redraw();
+}
+
+QString Pasians::loadFile()
+{
+    return QFileDialog::getOpenFileName(
+                this,
+                "Load game",
+                "",
+                "Pasians game (*.pas)");
+}
+
+QString Pasians::saveFile()
+{
+    return QFileDialog::getSaveFileName(
+                this,
+                "Save game",
+                "game.pas",
+                "Pasians game (*.pas)");
+}
+
+void Pasians::on_actionSave_triggered()
+{
+    QString f = saveFile();
+}
+
+void Pasians::on_actionLoad_triggered()
+{
+    QString f = loadFile();
+}
+
+void Pasians::on_actionSave_2_triggered()
+{
+    QString f = saveFile();
+}
+
+void Pasians::on_actionLoad_2_triggered()
+{
+    QString f = loadFile();
+}
+
+void Pasians::on_actionSave_3_triggered()
+{
+    QString f = saveFile();
+}
+
+void Pasians::on_actionLoad_3_triggered()
+{
+    QString f = loadFile();
+}
+
+void Pasians::on_actionSave_4_triggered()
+{
+    QString f = saveFile();
+}
+
+void Pasians::on_actionLoad_4_triggered()
+{
+    QString f = loadFile();
 }
