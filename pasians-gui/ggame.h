@@ -25,7 +25,9 @@ public:
     void finish();
     bool done() const;
     void performUndo();
-private:
+    void performHint();
+protected:
+    void regenerate();
     bool isInitialized = false;
     bool isDone = false;
     Pasians *gameWindow = NULL;

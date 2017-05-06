@@ -24,7 +24,6 @@ void Game::setup()
     int i = 0;
     for (auto &card: cards)
     {
-        //cout << (int) card->type << "-" << (int) card->color << endl;
         if (i < 28)
         {
 
@@ -72,13 +71,9 @@ Move::Move(Pile *_from, Pile *_where)
 
 int Game::move(Pile *from, Pile *where, int index)
 {
-    std::cout << "Pile: " << (int)where->type << '\n';
-cout << where << endl;
-    cout << "in" << endl;
     Move save(from, where);
     vector<Card *> moving(from->cards.begin() + index, from->cards.end());
     save.number = moving.size();
-    std::cout << "Pile: " << (int)where->type << '\n';
     switch (where->type) {
         case 2:
             cout << "case 2" << endl;
@@ -281,7 +276,7 @@ Move Game::hint()
     {
         Card *c = NULL;
         index = -1;
-        for (int a = 0; a < bottomPiles[i].cards.size(); ++a)
+        for (size_t a = 0; a < bottomPiles[i].cards.size(); ++a)
         {
             if (bottomPiles[i].cards[a]->visible)
             {

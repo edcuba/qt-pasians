@@ -138,10 +138,8 @@ bool GGame::done() const
     return isDone;
 }
 
-void GGame::performUndo()
+void GGame::regenerate()
 {
-    undo();
-
     for (Card *card: pickPile.cards) {
         PlayLabel *w = static_cast<PlayLabel *>(card->parent);
         w->setPile(&pickPile);
@@ -185,4 +183,27 @@ void GGame::performUndo()
             }
         }
     }
+}
+
+void GGame::performUndo()
+{
+    undo();
+    regenerate();
+}
+
+void GGame::performHint()
+{
+    Move m = hint();
+
+    if (!m.where || !m.from) {
+        return;
+    }
+    if (m.number == -2) {
+        draw();
+    } else {
+        if (move(m.from, m.where, m.number) == 2) {
+            finish();
+        }
+    }
+    regenerate();
 }

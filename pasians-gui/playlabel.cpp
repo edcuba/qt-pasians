@@ -148,9 +148,7 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
     } else if (DEBUGMODE) {
         cout << "No pile" << endl;
     }
-
     game->redraw();
-
 }
 
 void PlayLabel::mouseMoveEvent(QMouseEvent *event)

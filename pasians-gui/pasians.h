@@ -51,6 +51,14 @@ private slots:
 
     void on_actionUndo_4_triggered();
 
+    void on_actionHint_triggered();
+
+    void on_actionHint_2_triggered();
+
+    void on_actionHint_3_triggered();
+
+    void on_actionHint_4_triggered();
+
 protected:
     vector<GGame*> games;
 
