@@ -6,7 +6,6 @@
 *   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
 **/
 
-#include <iostream>
 #include "paslib.h"
 
 using namespace std;
@@ -15,6 +14,18 @@ Card::Card(char _type, char _color)
 {
     type = _type;
     color = _color;
+}
+
+Card::Card(string str)
+{
+    istringstream iss(str);
+    vector<string> tokens{istream_iterator<string>{iss},
+                          istream_iterator<string>{}};
+
+    int num = 100;
+    type = stoi(tokens[0]);
+    color = stoi(tokens[1]);
+    visible = stoi(tokens[2]) ? true : false;
 }
 
 
@@ -381,14 +392,202 @@ void Heap::showTop()
     }
 }
 
-void Game::load()
+Game Game::load(string file_path)
 {
     Json::Value yolo;
-    yolo["pasians"].append("Game1");
 
-    cout << yolo << endl;
+    ifstream in(file_path);
+    in >> yolo;
+    in.close();
+
+    Game new_game;
+    new_game.topPiles.reserve(4);
+    new_game.bottomPiles.reserve(7);
+    for (auto str: yolo["pickPile"])
+    {
+        Card *card = new Card(str.asString());
+        new_game.pickPile.cards.push_back(card);
+    }
+    for (auto str: yolo["dropPile"])
+    {
+        Card *card = new Card(str.asString());
+        new_game.dropPile.cards.push_back(card);
+    }
+
+    for (size_t i = 0; i < new_game.topPiles.size(); ++i)
+    {
+        string name = "topPile-" + to_string(i);
+        for (auto str: yolo[name])
+        {
+            Card *card = new Card(str.asString());
+            new_game.topPiles[i].cards.push_back(card);
+        }
+    }
+
+    for (size_t i = 0; i < new_game.bottomPiles.size(); ++i)
+    {
+        string name = "bottomPile-" + to_string(i);
+        for (auto str: yolo[name])
+        {
+            Card *card = new Card(str.asString());
+            new_game.bottomPiles[i].cards.push_back(card);
+        }
+    }
+
+    for (auto str: yolo["moves"])
+    {
+        Pile *from;
+        Pile *where;
+        string tmp = str.asString();
+        istringstream iss(tmp);
+        vector<string> tokens{istream_iterator<string>{iss},
+                              istream_iterator<string>{}};
+        int num = stoi(tokens[1]);
+        if (tokens[0] == "b")
+        {
+            from = &bottomPiles[num];
+        }
+        else if (tokens[0] == "t")
+        {
+            from = &topPiles[num];
+        }
+        else if (tokens[0] == "d")
+        {
+            from = &dropPile;
+        }
+        else if (tokens[0] == "p")
+        {
+            from = &pickPile;
+        }
+        
+        num = stoi(tokens[3]);
+        if (tokens[2] == "b")
+        {
+            where = &bottomPiles[num];
+        }
+        else if (tokens[2] == "t")
+        {
+            where = &topPiles[num];
+        }
+        else if (tokens[2] == "d")
+        {
+            where = &dropPile;
+        }
+        else if (tokens[2] == "p")
+        {
+            where = &pickPile;
+        }
+        Move save(from, where);
+        save.number = stoi(tokens[4]);
+        new_game.moves.push_back(save);
+    }
+
+    return new_game;
 }
 
+void Game::save(string file_path)
+{
+    Json::Value yolo;
+
+    Json::Value ppile;
+    for (auto &card: pickPile.cards) {
+        ppile.append(to_string(card->type) + " " +to_string(card->color) + " " +(card->visible ? "1" : "0"));
+    }
+    yolo["pickPile"] = ppile;
+
+    Json::Value dpile;
+    for (auto &card: dropPile.cards) {
+        dpile.append(to_string(card->type) + " " +to_string(card->color) + " " +(card->visible ? "1" : "0"));
+    }
+    yolo["dropPile"] = dpile;
+
+    for (size_t i = 0; i < topPiles.size(); ++i)
+    {
+        Json::Value topPile;
+        string name = "topPile-" + to_string(i);
+        for (auto &card: topPiles[i].cards) {
+            topPile.append(to_string(card->type) + " " +to_string(card->color) + " " +(card->visible ? "1" : "0"));
+        }
+        yolo[name] = topPile;
+    }
+    for (size_t i = 0; i < bottomPiles.size(); ++i)
+    {
+        Json::Value bottomPile;
+        string name = "bottomPile-" + to_string(i);
+        for (auto &card: bottomPiles[i].cards) {
+            bottomPile.append(to_string(card->type) + " " +to_string(card->color) + " " +(card->visible ? "1" : "0"));
+        }
+        yolo[name] = bottomPile;
+    }
+
+    Json::Value j_moves;
+    for (auto &move: moves)
+    {
+        string str = "";
+        if (move.from == &bottomPiles[0])
+            str += "b 0";
+        else if (move.from == &bottomPiles[1])
+            str += "b 1";
+        else if (move.from == &bottomPiles[2])
+            str += "b 2";
+        else if (move.from == &bottomPiles[3])
+            str += "b 3";
+        else if (move.from == &bottomPiles[4])
+            str += "b 4";
+        else if (move.from == &bottomPiles[5])
+            str += "b 5";
+        else if (move.from == &bottomPiles[6])
+            str += "b 6";
+        else if (move.from == &topPiles[0])
+            str += "t 0";
+        else if (move.from == &topPiles[1])
+            str += "t 1";
+        else if (move.from == &topPiles[2])
+            str += "t 2";
+        else if (move.from == &topPiles[3])
+            str += "t 3";
+        else if (move.from == &dropPile)
+            str += "d 0";
+        else if (move.from == &pickPile)
+            str += "p 0";
+
+        str += " ";
+        if (move.where == &bottomPiles[0])
+            str += "b 0";
+        else if (move.where == &bottomPiles[1])
+            str += "b 1";
+        else if (move.where == &bottomPiles[2])
+            str += "b 2";
+        else if (move.where == &bottomPiles[3])
+            str += "b 3";
+        else if (move.where == &bottomPiles[4])
+            str += "b 4";
+        else if (move.where == &bottomPiles[5])
+            str += "b 5";
+        else if (move.where == &bottomPiles[6])
+            str += "b 6";
+        else if (move.where == &topPiles[0])
+            str += "t 0";
+        else if (move.where == &topPiles[1])
+            str += "t 1";
+        else if (move.where == &topPiles[2])
+            str += "t 2";
+        else if (move.where == &topPiles[3])
+            str += "t 3";
+        else if (move.where == &dropPile)
+            str += "d 0";
+        else if (move.where == &pickPile)
+            str += "p 0";
+
+        str += " " + to_string(move.number);
+        j_moves.append(str);
+    }
+    yolo["moves"] = j_moves;
+
+    ofstream out(file_path);
+    out << yolo;
+    out.close();
+}
 
 void Pile::setPlaceHolder(void *placeHolder)
 {

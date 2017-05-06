@@ -45,6 +45,9 @@ protected:
     static int hint(vector<string> &attributes);
     static int change(vector<string> &attributes);
     static int show(vector<string> &attributes);
+    static int load(vector<string> &attributes);
+    static int save(vector<string> &attributes);
+
 
     const unordered_map<string, int (*)(vector<string> &)> commands {
         {"new", *Cli::newGame},
@@ -55,7 +58,9 @@ protected:
         {"move", *Cli::move},
         {"hint", *Cli::hint},
         {"change", *Cli::change},
-        {"show", *Cli::show}
+        {"show", *Cli::show},
+        {"save", *Cli::save},
+        {"load", *Cli::load}
     };
 };
 
