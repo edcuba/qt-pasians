@@ -24,7 +24,7 @@ void Game::setup()
     int i = 0;
     for (auto &card: cards)
     {
-        cout << (int) card->type << "-" << (int) card->color << endl;
+        //cout << (int) card->type << "-" << (int) card->color << endl;
         if (i < 28)
         {
 
@@ -72,10 +72,13 @@ Move::Move(Pile *_from, Pile *_where)
 
 int Game::move(Pile *from, Pile *where, int index)
 {
+    std::cout << "Pile: " << (int)where->type << '\n';
+cout << where << endl;
     cout << "in" << endl;
     Move save(from, where);
     vector<Card *> moving(from->cards.begin() + index, from->cards.end());
     save.number = moving.size();
+    std::cout << "Pile: " << (int)where->type << '\n';
     switch (where->type) {
         case 2:
             cout << "case 2" << endl;
@@ -102,7 +105,8 @@ int Game::move(Pile *from, Pile *where, int index)
         case 3:
         cout << "case 3" << endl;
 
-            if ((!where->cards.empty() && moving[0]->type == 13)) {
+            if (where->cards.empty() && moving[0]->type != 13)
+            {
                 cout << "case A" << endl;
                 return 0;
             }
@@ -124,18 +128,18 @@ int Game::move(Pile *from, Pile *where, int index)
     }
     from->cards.erase(from->cards.begin() + index, from->cards.end());
     where->add(moving);
-    if (from->cards.size() && !from->cards.back()->visible)
+    if (!from->cards.empty() && !from->cards.back()->visible)
     {
         from->cards.back()->visible = true;
         save.turned = true;
     }
 
-    /*for (auto &pile: bottomPiles)
-    {
-        if (!pile.cards.empty())
-            break;
+    int num = 0;
+    for (int i = 0; i < 4; ++i)
+        num += topPiles[i].cards.size();
+
+    if (num == 52)
         return 2;
-    }*/
 
     moves.push_back(save);
 
@@ -158,7 +162,6 @@ void Game::draw()
     {
         if (dropPile.cards.empty())
             return;
-
 
         for (auto card = dropPile.cards.rbegin();
              card != dropPile.cards.rend(); ++card)
@@ -187,9 +190,13 @@ void Game::undo()
         card->visible = false;
         pickPile.add(card);
         dropPile.cards.pop_back();
-    } else if (last.from  == &(dropPile) &&
-        last.where == &(pickPile))
+        moves.pop_back();
+        return;
+    }
+
+    if (last.from  == &(dropPile) && last.where == &(pickPile))
     {
+        std::cout << "DAvam" << '\n';
         for (auto card = pickPile.cards.rbegin();
              card != pickPile.cards.rend(); ++card)
         {
@@ -200,15 +207,146 @@ void Game::undo()
 
         pickPile.cards.erase(pickPile.cards.begin(),
                              pickPile.cards.end());
+        moves.pop_back();
         return;
     }
 
-    moves.pop_back();
-
-    /*
+    int index = last.where->cards.size() - last.number;
+    vector<Card *> moving(last.where->cards.begin() + index,
+                          last.where->cards.end());
     if (last.turned)
-        last.from->cards.back().visible = false;
-        */
+    {
+        last.from->cards.back()->visible = false;
+    }
+
+    last.where->cards.erase(last.where->cards.begin() + index,
+                            last.where->cards.end());
+    last.from->add(moving);
+
+
+
+    moves.pop_back();
+}
+
+Move Game::hint()
+{
+    if (!dropPile.cards.empty())
+    {
+        Card *c = dropPile.cards.back();
+        for (auto &pile: topPiles)
+        {
+            if (pile.cards.empty())
+            {
+                if (c->type != 1)
+                    continue;
+            }
+            else if (c->color != pile.cards[0]->color ||
+                     pile.cards.back()->type - c->type != -1)
+            {
+                continue;
+            }
+            Move save(&dropPile, &pile);
+            save.number = dropPile.cards.size() - 1;
+            return save;
+        }
+    }
+
+
+    for (int i = 6; i >= 0; --i)
+    {
+        Card *c = NULL;
+        for (auto &pile: topPiles)
+        {
+            if (bottomPiles[i].cards.empty())
+                continue;
+            c = bottomPiles[i].cards.back();
+            if (pile.cards.empty())
+            {
+                if (c->type != 1)
+                    continue;
+            }
+            else if (c->color != pile.cards[0]->color ||
+                     pile.cards.back()->type - c->type != -1)
+            {
+                continue;
+            }
+            Move save(&bottomPiles[i], &pile);
+            save.number = bottomPiles[i].cards.size() - 1;
+            return save;
+        }
+    }
+
+    int index = -1;
+    for (int i = 6; i >= 0; --i)
+    {
+        Card *c = NULL;
+        index = -1;
+        for (int a = 0; a < bottomPiles[i].cards.size(); ++a)
+        {
+            if (bottomPiles[i].cards[a]->visible)
+            {
+                c = bottomPiles[i].cards[a];
+                index = a;
+                if (c->type == 13 && index == 0)
+                {
+                    c = NULL;
+                }
+                break;
+            }
+        }
+        if (!c)
+            continue;
+
+        for (auto &pile: bottomPiles)
+        {
+            if (pile.cards.empty())
+            {
+                if (c->type != 13)
+                    continue;
+            }
+            else if ((c->color + pile.cards.back()->color) % 2 == 0 ||
+                     c->type - pile.cards.back()->type != -1)
+            {
+                continue;
+            }
+
+            Move save(&bottomPiles[i], &pile);
+            save.number = index;
+            return save;
+        }
+    }
+
+    if (!dropPile.cards.empty())
+    {
+        Card *c = dropPile.cards.back();
+        for (auto &pile: bottomPiles)
+        {
+            if (pile.cards.empty())
+            {
+                if (c->type != 13)
+                    continue;
+            }
+            else if ((c->color + pile.cards.back()->color) % 2 == 0 ||
+                      c->type - pile.cards.back()->type != -1)
+            {
+                continue;
+            }
+            Move save(&dropPile, &pile);
+            save.number = dropPile.cards.size() - 1;
+            return save;
+        }
+    }
+
+    if (!pickPile.cards.empty() || !dropPile.cards.empty())
+    {
+        Move save(&pickPile, &dropPile);
+        save.number = -2;
+        return save;
+    }
+
+    Move save(NULL, NULL);
+    save.number = -1;
+    return save;
 }
 
 /**

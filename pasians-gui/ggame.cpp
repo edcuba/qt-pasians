@@ -144,6 +144,7 @@ void GGame::performUndo()
 
     for (Card *card: pickPile.cards) {
         PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+        w->setPile(&pickPile);
         if (card->visible) {
             w->reveal();
         } else {
@@ -151,8 +152,9 @@ void GGame::performUndo()
         }
     }
 
-    for (Card *card: pickPile.cards) {
+    for (Card *card: dropPile.cards) {
         PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+        w->setPile(&dropPile);
         if (card->visible) {
             w->reveal();
         } else {
@@ -163,6 +165,7 @@ void GGame::performUndo()
     for (auto &pile: topPiles) {
         for (Card *card: pile.cards) {
             PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+            w->setPile(&pile);
             if (card->visible) {
                 w->reveal();
             } else {
@@ -174,6 +177,7 @@ void GGame::performUndo()
     for (auto &pile: bottomPiles) {
         for (Card *card: pile.cards) {
             PlayLabel *w = static_cast<PlayLabel *>(card->parent);
+            w->setPile(&pile);
             if (card->visible) {
                 w->reveal();
             } else {
@@ -182,5 +186,3 @@ void GGame::performUndo()
         }
     }
 }
-
-

@@ -17,6 +17,7 @@
 using namespace std;
 
 vector<Game> games;
+int actual_game = -1;
 
 Command::Command(string _cmd)
 {
@@ -35,7 +36,7 @@ int Cli::newGame(vector<string> &attributes)
     Game game;
     game.setup();
     games.push_back(game);
-
+    actual_game = games.size() - 1;
     printState(game);
     return 0;
 }
@@ -73,7 +74,8 @@ void Cli::printPile(Pile &pile)
 **/
 void Cli::printState(Game &game)
 {
-    cout << "PICK" << endl;
+    cout << "-----GAME "<< (int)actual_game << "-----"<< '\n';
+    cout << "pick" << endl;
     printPile(game.pickPile);
 
     cout << "drop" << endl;
@@ -194,15 +196,15 @@ int Cli::printHelp(vector<string> &attributes)
 
 int Cli::draw(vector<string> &attributes)
 {
-    games[0].draw();
-    printState(games[0]);
+    games[actual_game].draw();
+    printState(games[actual_game]);
     return 0;
 }
 
 int Cli::undo(vector<string> &attributes)
 {
-    games[0].undo();
-    printState(games[0]);
+    games[actual_game].undo();
+    printState(games[actual_game]);
     return 0;
 }
 
@@ -217,29 +219,29 @@ int Cli::move(vector<string> &attributes)
   transform(attributes[1].begin(), attributes[1].end(), attributes[1].begin(), ::tolower);
   Pile *from;
   if (attributes[0] == "b1")
-    from = &(games[0].bottomPiles[0]);
+    from = &(games[actual_game].bottomPiles[0]);
   else if (attributes[0] == "b2")
-    from = &(games[0].bottomPiles[1]);
+    from = &(games[actual_game].bottomPiles[1]);
   else if (attributes[0] == "b3")
-    from = &(games[0].bottomPiles[2]);
+    from = &(games[actual_game].bottomPiles[2]);
   else if (attributes[0] == "b4")
-    from = &(games[0].bottomPiles[3]);
+    from = &(games[actual_game].bottomPiles[3]);
   else if (attributes[0] == "b5")
-    from = &(games[0].bottomPiles[4]);
+    from = &(games[actual_game].bottomPiles[4]);
   else if (attributes[0] == "b6")
-    from = &(games[0].bottomPiles[5]);
+    from = &(games[actual_game].bottomPiles[5]);
   else if (attributes[0] == "b7")
-    from = &(games[0].bottomPiles[6]);
+    from = &(games[actual_game].bottomPiles[6]);
   else if (attributes[0] == "t1")
-    from = &(games[0].topPiles[0]);
+    from = &(games[actual_game].topPiles[0]);
   else if (attributes[0] == "t2")
-    from = &(games[0].topPiles[1]);
+    from = &(games[actual_game].topPiles[1]);
   else if (attributes[0] == "t3")
-    from = &(games[0].topPiles[2]);
+    from = &(games[actual_game].topPiles[2]);
   else if (attributes[0] == "t4")
-    from = &(games[0].topPiles[3]);
+    from = &(games[actual_game].topPiles[3]);
   else if (attributes[0] == "drop")
-    from = &(games[0].dropPile);
+    from = &(games[actual_game].dropPile);
   else
   {
     cout << "Uncorrect [FROM]" << endl;
@@ -248,27 +250,27 @@ int Cli::move(vector<string> &attributes)
 
   Pile *where;
   if (attributes[1] == "b1")
-    where = &(games[0].bottomPiles[0]);
+    where = &(games[actual_game].bottomPiles[0]);
   else if (attributes[1] == "b2")
-    where = &(games[0].bottomPiles[1]);
+    where = &(games[actual_game].bottomPiles[1]);
   else if (attributes[1] == "b3")
-    where = &(games[0].bottomPiles[2]);
+    where = &(games[actual_game].bottomPiles[2]);
   else if (attributes[1] == "b4")
-    where = &(games[0].bottomPiles[3]);
+    where = &(games[actual_game].bottomPiles[3]);
   else if (attributes[1] == "b5")
-    where = &(games[0].bottomPiles[4]);
+    where = &(games[actual_game].bottomPiles[4]);
   else if (attributes[1] == "b6")
-    where = &(games[0].bottomPiles[5]);
+    where = &(games[actual_game].bottomPiles[5]);
   else if (attributes[1] == "b7")
-    where = &(games[0].bottomPiles[6]);
+    where = &(games[actual_game].bottomPiles[6]);
   else if (attributes[1] == "t1")
-    where = &(games[0].topPiles[0]);
+    where = &(games[actual_game].topPiles[0]);
   else if (attributes[1] == "t2")
-    where = &(games[0].topPiles[1]);
+    where = &(games[actual_game].topPiles[1]);
   else if (attributes[1] == "t3")
-    where = &(games[0].topPiles[2]);
+    where = &(games[actual_game].topPiles[2]);
   else if (attributes[1] == "t4")
-    where = &(games[0].topPiles[3]);
+    where = &(games[actual_game].topPiles[3]);
   else
   {
     cout << "Uncorrect [WHERE]" << endl;
@@ -288,16 +290,16 @@ int Cli::move(vector<string> &attributes)
 
   int index  = from->cards.size() - num;
 
-  if (from == &(games[0].dropPile)  && num != 1)
+  if (from == &(games[actual_game].dropPile)  && num != 1)
   {
     cout << "Cant pick more than one card from drop pile." << endl;
     return 0;
   }
 
-  if ((from == &(games[0].topPiles[0]) ||
-       from == &(games[0].topPiles[1]) ||
-       from == &(games[0].topPiles[2]) ||
-       from == &(games[0].topPiles[3])
+  if ((from == &(games[actual_game].topPiles[0]) ||
+       from == &(games[actual_game].topPiles[1]) ||
+       from == &(games[actual_game].topPiles[2]) ||
+       from == &(games[actual_game].topPiles[3])
       ) && num != 1)
   {
     cout << "Cant pick more than one card from top piles." << endl;
@@ -316,14 +318,85 @@ int Cli::move(vector<string> &attributes)
     return 1;
   }
 
-  games[0].move(from, where, index);
+  games[actual_game].move(from, where, index);
 
-  printState(games[0]);
+  printState(games[actual_game]);
 
 
   return 0;
 }
 
+int Cli::hint(vector<string> &attributes)
+{
+    Move move = games[actual_game].hint();
+    Pile * w = move.where;
+    if (!move.where || !move.from)
+    {
+        cout << "Cant find a hint" << endl;
+        return 1;
+    }
+
+    int state = 0;
+    if (move.number == -2)
+    {
+        games[actual_game].draw();
+    }
+    else
+    {
+        state = games[actual_game].move(move.from, w, move.number);
+    }
+    printState(games[actual_game]);
+    if ( state== 2)
+    {
+        cout << "VICTORY!" << endl;
+    }
+    return 0;
+}
+
+int Cli::change(vector<string> &attributes)
+{
+    if (attributes.size() != 1)
+    {
+        cout << "Wrong number of arguments\nusage: change [GAME_ID]" << endl;
+        return 1;
+    }
+
+    int num = 100;
+    try
+    {
+      num = stoi(attributes[0]);
+    }
+    catch (...)
+    {
+      cout << "[GAME_ID] must be a number" << endl;
+      return 1;
+    }
+
+    if (num < 0 || num > games.size() - 1)
+    {
+        cout << "[GAME_ID] does not exist." << endl;
+        return 1;
+    }
+
+    actual_game = num;
+    printState(games[actual_game]);
+    return 0;
+}
+
+int Cli::show(vector<string> &attributes)
+{
+    (void)attributes;
+    if (games.empty())
+    {
+        cout << "No active games" << endl;
+        return 0;
+    }
+    for (unsigned i = 0; i < games.size(); ++i)
+    {
+        std::cout << "GAME " << i << endl;;
+    }
+    return 0;
+}
 
 int main()
 {

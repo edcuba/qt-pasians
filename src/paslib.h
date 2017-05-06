@@ -65,6 +65,7 @@ public:
     int move(Pile *from, Pile *where, int index);
     void draw();
     void undo();
+    Move hint();
     vector<Pile> bottomPiles{7};
     vector<Pile> topPiles{4};
     Pile pickPile;

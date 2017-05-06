@@ -42,6 +42,9 @@ protected:
     static int draw(vector<string> &attributes);
     static int undo(vector<string> &attributes);
     static int move(vector<string> &attributes);
+    static int hint(vector<string> &attributes);
+    static int change(vector<string> &attributes);
+    static int show(vector<string> &attributes);
 
     const unordered_map<string, int (*)(vector<string> &)> commands {
         {"new", *Cli::newGame},
@@ -49,7 +52,10 @@ protected:
         {"help", *Cli::printHelp},
         {"draw", *Cli::draw},
         {"undo", *Cli::undo},
-        {"move", *Cli::move}
+        {"move", *Cli::move},
+        {"hint", *Cli::hint},
+        {"change", *Cli::change},
+        {"show", *Cli::show}
     };
 };
 
@@ -57,7 +63,6 @@ const map<string, string> helpList {
     {"new",  "       \t\tStart new game."},
     {"exit", " [save]\t\tExit. Add save to keep the game status."},
     {"help", " [cmd] \t\tPrint this list. Add command name to print only its record."}
-    //{"move", "sss"}
 };
 
 // 2-10, J (11), Q (12), K (13), A (1)
