@@ -6,7 +6,7 @@
 #include <QSize>
 #include <QPixmap>
 
-#define DEBUGMODE true
+#define DEBUGMODE false
 
 #include <iostream>
 

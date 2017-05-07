@@ -444,8 +444,8 @@ void Game::load(string file_path)
 
     for (auto str: yolo["moves"])
     {
-        Pile *from;
-        Pile *where;
+        Pile *from = NULL;
+        Pile *where = NULL;
         string tmp = str.asString();
         istringstream iss(tmp);
         vector<string> tokens{istream_iterator<string>{iss},
