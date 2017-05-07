@@ -33,6 +33,7 @@ Command::Command(){}
 **/
 int Cli::newGame(vector<string> &attributes)
 {
+    (void) attributes;
     Game game;
     game.setup();
     games.push_back(game);
@@ -74,7 +75,7 @@ void Cli::printPile(Pile &pile)
 **/
 void Cli::printState(Game &game)
 {
-    cout << "-----GAME "<< (int)actual_game << "-----"<< '\n';
+    cout << "----- GAME "<< (int)actual_game << " -----"<< '\n';
     cout << "pick" << endl;
     printPile(game.pickPile);
 
@@ -196,6 +197,7 @@ int Cli::printHelp(vector<string> &attributes)
 
 int Cli::draw(vector<string> &attributes)
 {
+    (void) attributes;
     games[actual_game].draw();
     printState(games[actual_game]);
     return 0;
@@ -203,6 +205,7 @@ int Cli::draw(vector<string> &attributes)
 
 int Cli::undo(vector<string> &attributes)
 {
+    (void) attributes;
     games[actual_game].undo();
     printState(games[actual_game]);
     return 0;
@@ -328,6 +331,7 @@ int Cli::move(vector<string> &attributes)
 
 int Cli::hint(vector<string> &attributes)
 {
+    (void) attributes;
     Move move = games[actual_game].hint();
     Pile * w = move.where;
     if (!move.where || !move.from)
@@ -372,7 +376,7 @@ int Cli::change(vector<string> &attributes)
       return 1;
     }
 
-    if (num < 0 || num > games.size() - 1)
+    if (num < 0 || num > (int) games.size() - 1)
     {
         cout << "[GAME_ID] does not exist." << endl;
         return 1;
@@ -404,7 +408,7 @@ int Cli::save(vector<string> &attributes)
 }
 int Cli::load(vector<string> &attributes)
 {
-    games[actual_game] = games[actual_game].load(attributes[0]);
+    games[actual_game].load(attributes[0]);
     printState(games[actual_game]);
     return 0;
 }

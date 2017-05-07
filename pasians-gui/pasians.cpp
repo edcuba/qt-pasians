@@ -453,39 +453,95 @@ QString Pasians::saveFile()
 void Pasians::on_actionSave_triggered()
 {
     QString f = saveFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *game = games[0];
+    game->save(f.toStdString());
 }
 
 void Pasians::on_actionLoad_triggered()
 {
     QString f = loadFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *loaded = new GGame(this);
+    loaded->setup();
+    loaded->load(f.toStdString());
+    finalizeGame(games[0]);
+    games[0] = loaded;
+    redraw();
 }
 
 void Pasians::on_actionSave_2_triggered()
 {
     QString f = saveFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *game = games[1];
+    game->save(f.toStdString());
 }
 
 void Pasians::on_actionLoad_2_triggered()
 {
     QString f = loadFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *loaded = new GGame(this);
+    loaded->setup();
+    loaded->load(f.toStdString());
+    finalizeGame(games[1]);
+    games[1] = loaded;
+    redraw();
 }
 
 void Pasians::on_actionSave_3_triggered()
 {
     QString f = saveFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *game = games[2];
+    game->save(f.toStdString());
 }
 
 void Pasians::on_actionLoad_3_triggered()
 {
     QString f = loadFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *loaded = new GGame(this);
+    loaded->setup();
+    loaded->load(f.toStdString());
+    finalizeGame(games[2]);
+    games[2] = loaded;
+    redraw();
 }
 
 void Pasians::on_actionSave_4_triggered()
 {
     QString f = saveFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *game = games[3];
+    game->save(f.toStdString());
 }
 
 void Pasians::on_actionLoad_4_triggered()
 {
     QString f = loadFile();
+    if (f.isEmpty()) {
+        return;
+    }
+    GGame *loaded = new GGame(this);
+    loaded->setup();
+    loaded->load(f.toStdString());
+    finalizeGame(games[3]);
+    games[3] = loaded;
+    redraw();
 }

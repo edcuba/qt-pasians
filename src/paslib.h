@@ -66,7 +66,7 @@ class Game {
 public:
     void setup();
     void reset();
-    Game load(string);
+    void load(string);
     void save(string);
 
     int move(Pile *from, Pile *where, int index);

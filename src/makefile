@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS = -std=c++11 -Wall -Wextra -O0 -g
-default: pasians-cli
+default: hra2017-cli
 
 json.o: jsoncpp.cpp
 	$(CC) $(CFLAGS) $^ -c -o $@
@@ -8,8 +8,8 @@ json.o: jsoncpp.cpp
 paslib.o: paslib.cc
 	$(CC) $(CFLAGS) $^ -c -o $@
 
-pasians-cli: paslib.o json.o pasians-cli.cc
+hra2017-cli: paslib.o json.o pasians-cli.cc
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm -f paslib.o pasians-cli
+	rm -f paslib.o hra2017-cli

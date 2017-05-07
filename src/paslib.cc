@@ -21,8 +21,6 @@ Card::Card(string str)
     istringstream iss(str);
     vector<string> tokens{istream_iterator<string>{iss},
                           istream_iterator<string>{}};
-
-    int num = 100;
     type = stoi(tokens[0]);
     color = stoi(tokens[1]);
     visible = stoi(tokens[2]) ? true : false;
@@ -392,7 +390,7 @@ void Heap::showTop()
     }
 }
 
-Game Game::load(string file_path)
+void Game::load(string file_path)
 {
     Json::Value yolo;
 
@@ -400,37 +398,47 @@ Game Game::load(string file_path)
     in >> yolo;
     in.close();
 
-    Game new_game;
-    new_game.topPiles.reserve(4);
-    new_game.bottomPiles.reserve(7);
+    dropPile.cards.clear();
+    pickPile.cards.clear();
+
+    for (auto &pile: bottomPiles) {
+        pile.cards.clear();
+    }
+
+    for (auto &pile: topPiles) {
+        pile.cards.clear();
+    }
+
+    moves.clear();
+
     for (auto str: yolo["pickPile"])
     {
         Card *card = new Card(str.asString());
-        new_game.pickPile.cards.push_back(card);
+        pickPile.cards.push_back(card);
     }
     for (auto str: yolo["dropPile"])
     {
         Card *card = new Card(str.asString());
-        new_game.dropPile.cards.push_back(card);
+        dropPile.cards.push_back(card);
     }
 
-    for (size_t i = 0; i < new_game.topPiles.size(); ++i)
+    for (size_t i = 0; i < topPiles.size(); ++i)
     {
         string name = "topPile-" + to_string(i);
         for (auto str: yolo[name])
         {
             Card *card = new Card(str.asString());
-            new_game.topPiles[i].cards.push_back(card);
+            topPiles[i].cards.push_back(card);
         }
     }
 
-    for (size_t i = 0; i < new_game.bottomPiles.size(); ++i)
+    for (size_t i = 0; i < bottomPiles.size(); ++i)
     {
         string name = "bottomPile-" + to_string(i);
         for (auto str: yolo[name])
         {
             Card *card = new Card(str.asString());
-            new_game.bottomPiles[i].cards.push_back(card);
+            bottomPiles[i].cards.push_back(card);
         }
     }
 
@@ -479,10 +487,8 @@ Game Game::load(string file_path)
         }
         Move save(from, where);
         save.number = stoi(tokens[4]);
-        new_game.moves.push_back(save);
+        moves.push_back(save);
     }
-
-    return new_game;
 }
 
 void Game::save(string file_path)
