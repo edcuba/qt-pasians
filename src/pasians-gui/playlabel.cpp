@@ -1,3 +1,11 @@
+/**
+* playlabel.cpp
+* Pasians GUI - ICP 2016/2017
+* Authors:
+*   Eduard Cuba <xcubae00@stud.fit.vutbr.cz>
+*   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
+**/
+
 #include "playlabel.h"
 #include "cards.h"
 #include <QMouseEvent>
@@ -10,6 +18,10 @@
 
 #include <iostream>
 
+
+/**
+* @brief create holder for card
+**/
 PlayLabel::PlayLabel(Card *card, QSize &cardSize)
 {
     card->parent = this;
@@ -23,6 +35,9 @@ PlayLabel::PlayLabel(Card *card, QSize &cardSize)
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
+/**
+* @brief update card image
+**/
 void PlayLabel::updateImage()
 {
     string type = "none";
@@ -40,6 +55,10 @@ void PlayLabel::updateImage()
     setScaledContents(true);
 }
 
+
+/**
+* @brief show card content
+**/
 void PlayLabel::reveal()
 {
     if (!cardVisible) {
@@ -49,6 +68,9 @@ void PlayLabel::reveal()
     }
 }
 
+/**
+* @brief hide card content
+**/
 void PlayLabel::hide()
 {
     if (cardVisible) {
@@ -58,6 +80,9 @@ void PlayLabel::hide()
     }
 }
 
+/**
+* @handle mouse click on card
+**/
 void PlayLabel::mousePressEvent(QMouseEvent *event)
 {
     childs.clear();
@@ -112,12 +137,19 @@ void PlayLabel::mousePressEvent(QMouseEvent *event)
     mouseMoveEvent(event);
 }
 
+
+/**
+* @handle set Z coordinate of card - send it to back or front
+**/
 void PlayLabel::setZ(int z)
 {
     cardWrapper->setZValue(z);
 }
 
 
+/**
+* @brief handle card release
+**/
 void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
@@ -151,6 +183,10 @@ void PlayLabel::mouseReleaseEvent(QMouseEvent *event)
     game->redraw();
 }
 
+
+/**
+* @brief card move
+**/
 void PlayLabel::mouseMoveEvent(QMouseEvent *event)
 {
     if (placeHolder) {
@@ -179,22 +215,34 @@ void PlayLabel::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+/**
+* @brief set card context - its game and actual pile
+**/
 void PlayLabel::setContext(Pile *pile, GGame *ggame)
 {
     actualPile = pile;
     game = ggame;
 }
 
+/**
+* @brief temporarily move card to coordinates
+**/
 void PlayLabel::moveCard(QPoint &position)
 {
     cardWrapper->setPos(position);
 }
 
+/**
+* @brief set wrapper object for card
+**/
 void PlayLabel::setWrapper(PlayWrapper *wrapper)
 {
     cardWrapper = wrapper;
 }
 
+/**
+* @brief move card to coordinates
+**/
 void PlayLabel::setPos(QPoint &point)
 {
     if (cardWrapper) {
@@ -202,11 +250,18 @@ void PlayLabel::setPos(QPoint &point)
     }
 }
 
+/**
+* @brief set actual pile for card
+**/
 void PlayLabel::setPile(Pile *pile)
 {
     actualPile = pile;
 }
 
+/**
+* @brief move card to the another pile
+* @param pile target pile:
+**/
 void PlayLabel::changePile(Pile *pile)
 {
     vector<Card *>& thisPile = actualPile->cards;
@@ -238,16 +293,26 @@ void PlayLabel::changePile(Pile *pile)
     }
 }
 
+
+/**
+* @brief crate card hash in format type-color
+**/
 string PlayLabel::hash()
 {
     return to_string((int) gameCard->type) + "-" + to_string((int) gameCard->color);
 }
 
+/**
+* @brief convert card to placeholder
+**/
 void PlayLabel::setPlaceHolder()
 {
     placeHolder = true;
 }
 
+/**
+* @brief set new cardsize
+**/
 void PlayLabel::setSize(QSize &size)
 {
     setFixedSize(size);
@@ -255,9 +320,10 @@ void PlayLabel::setSize(QSize &size)
 
 }
 
+/**
+* @returns card wrapper
+**/
 PlayWrapper *PlayLabel::wrapper() const
 {
     return cardWrapper;
 }
-
-

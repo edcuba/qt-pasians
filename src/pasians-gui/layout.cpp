@@ -1,3 +1,11 @@
+/**
+* layout.cpp
+* Pasians GUI - ICP 2016/2017
+* Authors:
+*   Eduard Cuba <xcubae00@stud.fit.vutbr.cz>
+*   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
+**/
+
 #include "layout.h"
 #include <QSize>
 #include <QPoint>
@@ -14,6 +22,10 @@ Layout::Layout(const QSize &size)
     setupLayout(size, QPoint());
 }
 
+/**
+* @brief create layout for game
+* Game position is specified by offset
+**/
 void Layout::setupLayout(const QSize &size, const QPoint &offset)
 {
 
@@ -52,5 +64,3 @@ void Layout::setupLayout(const QSize &size, const QPoint &offset)
     cardSize.setWidth(cardWidth);
     cardSize.setHeight(cardHeight);
 }
-
-

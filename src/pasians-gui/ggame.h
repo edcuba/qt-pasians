@@ -1,3 +1,11 @@
+/**
+* ggame.h
+* Pasians GUI - ICP 2016/2017
+* Authors:
+*   Eduard Cuba <xcubae00@stud.fit.vutbr.cz>
+*   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
+**/
+
 #ifndef GGAME_H
 #define GGAME_H
 

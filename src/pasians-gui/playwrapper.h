@@ -1,3 +1,11 @@
+/**
+* playwrapper.h
+* Pasians GUI - ICP 2016/2017
+* Authors:
+*   Eduard Cuba <xcubae00@stud.fit.vutbr.cz>
+*   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
+**/
+
 #ifndef PLAYWRAPPER_H
 #define PLAYWRAPPER_H
 

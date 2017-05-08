@@ -1,3 +1,11 @@
+/**
+* ggame.cpp
+* Pasians GUI - ICP 2016/2017
+* Authors:
+*   Eduard Cuba <xcubae00@stud.fit.vutbr.cz>
+*   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
+**/
+
 #include "ggame.h"
 #include "playwrapper.h"
 
@@ -8,6 +16,9 @@ GGame::GGame(Pasians *pasians)
     gameWindow = pasians;
 }
 
+/**
+* @brief check card visivility and redraw cards
+**/
 void GGame::redraw()
 {
     for (Pile &pile: bottomPiles) {
@@ -31,6 +42,9 @@ bool GGame::initialized() const
     return isInitialized;
 }
 
+/**
+* @brief get pile active rectangle
+**/
 QRectF GGame::getPileBoundaries(Pile &pile)
 {
     QRectF area(0, 0, 0, 0);
@@ -54,7 +68,9 @@ QRectF GGame::getPileBoundaries(Pile &pile)
     }
     return area;
 }
-
+/**
+* @brief check if specified point lays in some pile
+**/
 Pile *GGame::pileAt(const QPointF &point, Pile *ignore)
 {
     QRectF p = getPileBoundaries(pickPile);
@@ -86,6 +102,9 @@ Pile *GGame::pileAt(const QPointF &point, Pile *ignore)
     return NULL;
 }
 
+/**
+* @brief Set up wrapper for placeholder
+**/
 static PlayLabel *setUpWrapper(QSize &size, QPoint &place, QGraphicsScene *scene)
 {
     Card *hold = new Card(0, 0);
@@ -98,7 +117,9 @@ static PlayLabel *setUpWrapper(QSize &size, QPoint &place, QGraphicsScene *scene
     return l;
 }
 
-
+/**
+* @brief setup game placeholders
+**/
 void GGame::setupPlaceHolders(Layout &layout, QGraphicsScene *scene)
 {
     QSize &size = layout.cardSize;
@@ -138,6 +159,10 @@ bool GGame::done() const
     return isDone;
 }
 
+/**
+* @brief check card visibility and set actual pile
+* called after undo or hint action
+**/
 void GGame::regenerate()
 {
     for (Card *card: pickPile.cards) {
@@ -185,12 +210,18 @@ void GGame::regenerate()
     }
 }
 
+/**
+* @brief call undo and regenerate cards
+**/
 void GGame::performUndo()
 {
     undo();
     regenerate();
 }
 
+/**
+* @brief call hint and regenerate cards
+**/
 void GGame::performHint()
 {
     Move m = hint();

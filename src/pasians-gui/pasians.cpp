@@ -1,3 +1,11 @@
+/**
+* pasians.cpp
+* Pasians GUI - ICP 2016/2017
+* Authors:
+*   Eduard Cuba <xcubae00@stud.fit.vutbr.cz>
+*   Ondrej Kurak <xkurak00@stud.fit.vutbr.cz>
+**/
+
 #include "pasians.h"
 #include "ui_pasians.h"
 #include <QSize>
@@ -9,6 +17,9 @@
 #include "playwrapper.h"
 #include <QFileDialog>
 
+/**
+* @brief game window initialization
+**/
 Pasians::Pasians(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Pasians)
@@ -33,12 +44,18 @@ Pasians::Pasians(QWidget *parent) :
     ui->gameBoard->setMouseTracking(true);
 }
 
+/**
+* @brief handle window resize - refresh screen
+**/
 void Pasians::resizeEvent(QResizeEvent* event)
 {
     Q_UNUSED(event);
     showGames();
 }
 
+/**
+* @brief pasians destructor
+**/
 Pasians::~Pasians()
 {
     delete ui;
@@ -47,6 +64,9 @@ Pasians::~Pasians()
     }
 }
 
+/**
+* @brief show "You won" dialogue
+**/
 static void showFinish()
 {
     QMessageBox msgBox;
@@ -54,6 +74,9 @@ static void showFinish()
     msgBox.exec();
 }
 
+/**
+* @brief check if game is finished and redraw card positions
+**/
 void Pasians::redraw()
 {
     for (GGame *game: games) {
@@ -65,9 +88,8 @@ void Pasians::redraw()
 }
 
 /**
- * @brief Pasians::showGames show all games in global layout
- * @param layout global layout
- */
+ * @brief Pasians::showGames show all games
+**/
 void Pasians::showGames()
 {
     if (games.empty()) {
@@ -147,10 +169,9 @@ void Pasians::showGames()
 
 
 /**
- * @brief Pasians::drawCard draw single card
- *
+ * @brief create an draw single card
  * Column and row is specified by card.position
- * @param card game card
+ * @param card: game card
  * @returns card label reference
  */
 PlayLabel *Pasians::drawCard(Card *card, QSize &cardSize)
@@ -165,7 +186,7 @@ PlayLabel *Pasians::drawCard(Card *card, QSize &cardSize)
 }
 
 /**
- * @brief Pasians::generateGame generate new game
+ * @brief generate new game
  */
 GGame *Pasians::generateGame()
 {
@@ -178,7 +199,7 @@ GGame *Pasians::generateGame()
  * @brief Pasians::showGame print out single game within internal layout
  * @param game particular game
  * @param layout inner layout
- */
+**/
 void Pasians::showGame(GGame *game, Layout &layout)
 {
     PlayLabel *w;
@@ -293,6 +314,9 @@ void Pasians::showGame(GGame *game, Layout &layout)
     }
 }
 
+/**
+* @brief cleanup game
+**/
 void Pasians::finalizeGame(GGame *game)
 {
     if (!game->initialized()) {
