@@ -170,7 +170,7 @@ int Cli::run()
 /**
 * Print help for commands specified as attributes, or whole help
 * if no command is specified.
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::printHelp(vector<string> &attributes)
@@ -197,7 +197,7 @@ int Cli::printHelp(vector<string> &attributes)
 
 /**
 * Draw card from pickPile or put cards from dropPile to pickPile
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::draw(vector<string> &attributes)
@@ -210,7 +210,7 @@ int Cli::draw(vector<string> &attributes)
 
 /**
 * Reverses last move
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::undo(vector<string> &attributes)
@@ -223,7 +223,7 @@ int Cli::undo(vector<string> &attributes)
 
 /**
 * Moves cards from one pile to another
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::move(vector<string> &attributes)
@@ -347,7 +347,7 @@ int Cli::move(vector<string> &attributes)
 
 /**
 * Makes one move insted of user
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::hint(vector<string> &attributes)
@@ -380,7 +380,7 @@ int Cli::hint(vector<string> &attributes)
 
 /**
 * Changes actual game
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::change(vector<string> &attributes)
@@ -415,7 +415,7 @@ int Cli::change(vector<string> &attributes)
 
 /**
 * Shows active games
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::show(vector<string> &attributes)
@@ -435,7 +435,7 @@ int Cli::show(vector<string> &attributes)
 
 /**
 * Saves actual game to file
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::save(vector<string> &attributes)
@@ -446,7 +446,7 @@ int Cli::save(vector<string> &attributes)
 
 /**
 * Load game from file
-* @attributes: list of commands to print
+* @param attributes: list of commands to print
 * @return 0 if success, 1 if command was not found
 **/
 int Cli::load(vector<string> &attributes)

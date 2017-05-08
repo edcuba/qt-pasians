@@ -16,20 +16,20 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         pasians.cpp\
-        ../src/paslib.cc \
+        ../paslib.cc \
         playlabel.cpp \
         layout.cpp \
         ggame.cpp \
-        ../src/jsoncpp.cpp \
+        ../jsoncpp.cpp \
     playwrapper.cpp
 
 HEADERS  += pasians.h \
-        ../src/paslib.h \
+        ../paslib.h \
         playlabel.h \
         layout.h \
         cards.h \
         ggame.h \
-        ../src/json/json.h \
+        ../json/json.h \
     playwrapper.h
 
 FORMS    += pasians.ui

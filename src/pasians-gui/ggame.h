@@ -7,7 +7,7 @@
 
 class GGame;
 
-#include "../src/paslib.h"
+#include "../paslib.h"
 #include "pasians.h"
 #include "playlabel.h"
 #include "layout.h"
