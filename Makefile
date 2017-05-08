@@ -10,6 +10,7 @@ clean:
 	cd src && make clean
 	rm -rf doc/html
 	rm -f hra2017 hra2017-cli
+	rm -f xcubae00-xkurak00.tar.gz
 
 run:
 	./hra2017 &

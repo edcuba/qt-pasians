@@ -29,4 +29,5 @@ build-pasians-gui-Desktop*
 *.exe
 *.out
 *.app
-*hra2017-cli
+hra2017-cli
+hra2017
