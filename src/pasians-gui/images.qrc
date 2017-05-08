@@ -41,7 +41,6 @@
         <file>res/ace_of_hearts.png</file>
         <file>res/ace_of_spades.png</file>
         <file>res/back.jpg</file>
-        <file>res/black_joker.png</file>
         <file>res/jack_of_clubs.png</file>
         <file>res/jack_of_diamonds.png</file>
         <file>res/jack_of_hearts.png</file>
@@ -54,7 +53,6 @@
         <file>res/queen_of_diamonds.png</file>
         <file>res/queen_of_hearts.png</file>
         <file>res/queen_of_spades.png</file>
-        <file>res/red_joker.png</file>
         <file>res/none.png</file>
         <file>res/placeholder.png</file>
     </qresource>

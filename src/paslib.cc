@@ -109,13 +109,11 @@ int Game::move(Pile *from, Pile *where, int index)
     save.number = moving.size();
     switch (where->type) {
         case 2:
-            cout << "case 2" << endl;
             if (moving.size() != 1)
                 return 0;
             if (/*(!where->cards.empty() && moving[0].type == 1) ||*/
                 (where->cards.empty() && moving[0]->type != 1))
             {
-                cout << "case A" << endl;
                 return 0;
             }
 
@@ -124,18 +122,14 @@ int Game::move(Pile *from, Pile *where, int index)
                 if (where->cards.back()->color != moving[0]->color ||
                     where->cards.back()->type - moving[0]->type != -1)
                 {
-                    cout << "case B" << endl;
                     return 0;
                 }
             }
             break;
 
         case 3:
-        cout << "case 3" << endl;
-
             if (where->cards.empty() && moving[0]->type != 13)
             {
-                cout << "case A" << endl;
                 return 0;
             }
 
@@ -143,15 +137,11 @@ int Game::move(Pile *from, Pile *where, int index)
             {
                 if ((where->cards.back()->color + moving[0]->color) % 2 == 0 ||
                     where->cards.back()->type != moving[0]->type + 1) {
-                    cout << "Karta " << (int)moving[0]->type << endl;
-                    cout << (int) where->cards.back()->color << " " << (int)moving[0]->color << endl;
-                    cout << "case B" << endl;
                     return 0;
                 }
             }
             break;
         default:
-            cout << "case C" << endl;
             return 0;
     }
     from->cards.erase(from->cards.begin() + index, from->cards.end());
@@ -230,7 +220,6 @@ void Game::undo()
 
     if (last.from  == &(dropPile) && last.where == &(pickPile))
     {
-        std::cout << "DAvam" << '\n';
         for (auto card = pickPile.cards.rbegin();
              card != pickPile.cards.rend(); ++card)
         {

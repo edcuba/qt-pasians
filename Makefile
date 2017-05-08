@@ -17,4 +17,4 @@ run:
 	./hra2017-cli
 
 pack: clean
-	tar -zcf xcubae00-xkurak00.tar.gz src Makefile doc README.txt
+	tar -zcf xcubae00-xkurak00.tar.gz src examples Makefile doc README.txt
