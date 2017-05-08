@@ -11,8 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ../../hra2017
 TEMPLATE = app
 
-CONFIG += c++11
-
+win32:CONFIG += c++11
+macx:CONFIX +=c++11
+unix:QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp\
         pasians.cpp\
