@@ -1,7 +1,9 @@
 CC=g++
 CFLAGS = -std=c++11 -Wall -Wextra -O0 -g
-TARGET = ../hra2017-cli
-default: $(TARGET)
+PROFILE = pasians-gui/pasians-gui.pro
+TARGETCLI = ../hra2017-cli
+TARGET = ../hra2017
+default: $(TARGETCLI) $(TARGET)
 
 json.o: jsoncpp.cpp
 	$(CC) $(CFLAGS) $^ -c -o $@
@@ -9,8 +11,14 @@ json.o: jsoncpp.cpp
 paslib.o: paslib.cc
 	$(CC) $(CFLAGS) $^ -c -o $@
 
-$(TARGET): paslib.o json.o pasians-cli.cc
+$(TARGETCLI): paslib.o json.o pasians-cli.cc
 	$(CC) $(CFLAGS) $^ -o $@
 
+$(TARGET): paslib.o
+	mkdir -p build
+	cd build && qmake ../$(PROFILE)
+	cd build && make
+
 clean:
-	rm -f paslib.o hra2017-cli json.o
+	rm -f *.o
+	rm -rf build
