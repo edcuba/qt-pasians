@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS = -std=c++11 -Wall -Wextra -O0 -g
+CFLAGS = -std=c++11 -Wall -Wextra -O2
 PROFILE = pasians-gui/pasians-gui.pro
 TARGETCLI = ../hra2017-cli
 TARGET = ../hra2017
