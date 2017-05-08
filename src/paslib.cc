@@ -10,12 +10,21 @@
 
 using namespace std;
 
+/**
+* Card constructor
+* @param _type: card type
+* @param _color: card color
+**/
 Card::Card(char _type, char _color)
 {
     type = _type;
     color = _color;
 }
 
+/**
+* Card constructor for laoding from file
+* @param str: string with type, color, visibility
+**/
 Card::Card(string str)
 {
     istringstream iss(str);
@@ -27,6 +36,10 @@ Card::Card(string str)
 }
 
 
+/**
+* Game setup
+* Generating cards and dividing them to piles
+**/
 void Game::setup()
 {
     vector<Card *> cards = getCards();
@@ -72,12 +85,23 @@ void Game::setup()
 
 }
 
+/**
+* Move constructor
+* @param _from: from which pile
+* @param _where: to which pile
+**/
 Move::Move(Pile *_from, Pile *_where)
 {
     from = _from;
     where = _where;
 }
 
+/**
+* Move cards from `from` pile to `where` pile
+* @param from: from which pile
+* @param where: to which pile
+* @param index: card index
+**/
 int Game::move(Pile *from, Pile *where, int index)
 {
     Move save(from, where);
@@ -150,6 +174,9 @@ int Game::move(Pile *from, Pile *where, int index)
     return 1;
 }
 
+/**
+* Draw card from pickPile or put cards from dropPile to pickPile
+**/
 void Game::draw()
 {
     if (!pickPile.cards.empty())
@@ -181,6 +208,9 @@ void Game::draw()
     }
 }
 
+/**
+* Reverse last move
+**/
 void Game::undo()
 {
     if (moves.empty())
@@ -232,6 +262,10 @@ void Game::undo()
     moves.pop_back();
 }
 
+/**
+* Finds next possible move
+* @return Move with values or with NULL if no hint is found
+**/
 Move Game::hint()
 {
     if (!dropPile.cards.empty())
@@ -373,16 +407,27 @@ vector<Card *> Game::getCards()
 }
 
 
+/**
+* Add cards to heap
+* @param _cards: list of cards
+**/
 void Heap::add(vector<Card *> &_cards)
 {
     cards.insert(cards.end(), _cards.begin(), _cards.end());
 }
 
+/**
+* Add card to heap
+* @param card: card
+**/
 void Heap::add(Card *card)
 {
     cards.push_back(card);
 }
 
+/**
+* Show top card of the heap
+**/
 void Heap::showTop()
 {
     if (!cards.empty()) {
@@ -390,6 +435,10 @@ void Heap::showTop()
     }
 }
 
+/**
+* Load game from file
+* @param file_path: path to the file
+**/
 void Game::load(string file_path)
 {
     Json::Value yolo;
@@ -467,7 +516,7 @@ void Game::load(string file_path)
         {
             from = &pickPile;
         }
-        
+
         num = stoi(tokens[3]);
         if (tokens[2] == "b")
         {
@@ -491,6 +540,10 @@ void Game::load(string file_path)
     }
 }
 
+/**
+* Save game to file
+* @param file_path: path to the file
+**/
 void Game::save(string file_path)
 {
     Json::Value yolo;
@@ -595,6 +648,10 @@ void Game::save(string file_path)
     out.close();
 }
 
+/**
+* Set placeholder for empty pile
+* @param file_path: path to the file
+**/
 void Pile::setPlaceHolder(void *placeHolder)
 {
     _placeHolder = placeHolder;

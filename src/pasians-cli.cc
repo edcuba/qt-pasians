@@ -195,6 +195,11 @@ int Cli::printHelp(vector<string> &attributes)
 
 }
 
+/**
+* Draw card from pickPile or put cards from dropPile to pickPile
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::draw(vector<string> &attributes)
 {
     (void) attributes;
@@ -203,6 +208,11 @@ int Cli::draw(vector<string> &attributes)
     return 0;
 }
 
+/**
+* Reverses last move
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::undo(vector<string> &attributes)
 {
     (void) attributes;
@@ -211,6 +221,11 @@ int Cli::undo(vector<string> &attributes)
     return 0;
 }
 
+/**
+* Moves cards from one pile to another
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::move(vector<string> &attributes)
 {
   if (attributes.size() != 3)
@@ -329,6 +344,12 @@ int Cli::move(vector<string> &attributes)
   return 0;
 }
 
+
+/**
+* Makes one move insted of user
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::hint(vector<string> &attributes)
 {
     (void) attributes;
@@ -357,6 +378,11 @@ int Cli::hint(vector<string> &attributes)
     return 0;
 }
 
+/**
+* Changes actual game
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::change(vector<string> &attributes)
 {
     if (attributes.size() != 1)
@@ -387,6 +413,11 @@ int Cli::change(vector<string> &attributes)
     return 0;
 }
 
+/**
+* Shows active games
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::show(vector<string> &attributes)
 {
     (void)attributes;
@@ -401,17 +432,31 @@ int Cli::show(vector<string> &attributes)
     }
     return 0;
 }
+
+/**
+* Saves actual game to file
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::save(vector<string> &attributes)
 {
     games[actual_game].save(attributes[0]);
     return 0;
 }
+
+/**
+* Load game from file
+* @attributes: list of commands to print
+* @return 0 if success, 1 if command was not found
+**/
 int Cli::load(vector<string> &attributes)
 {
     games[actual_game].load(attributes[0]);
     printState(games[actual_game]);
     return 0;
 }
+
+
 int main()
 {
     Cli cli;
