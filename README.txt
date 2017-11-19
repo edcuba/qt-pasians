@@ -1,5 +1,5 @@
 # C++ Pasians - Solitaire
-* [Task])(https://www.fit.vutbr.cz/study/courses/ICP/public/ICP-PRJ-zadani.html)
+* [Task](https://www.fit.vutbr.cz/study/courses/ICP/public/ICP-PRJ-zadani.html)
 
 ## About
 * Pasians written in C++ using Qt framework with both GUI and CLI
